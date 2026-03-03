@@ -11,7 +11,7 @@ bool Initialize()
 	Renderer::LoadTextureFromFile(_ftex, "Data/Font.png", BGFX_SAMPLER_MIN_POINT |
 		BGFX_SAMPLER_MAG_POINT |
 		BGFX_SAMPLER_U_CLAMP |
-		BGFX_SAMPLER_V_CLAMP, "Font", false);
+		BGFX_SAMPLER_V_CLAMP, "Font", false, false);
 		
 	_spriteFont = new Sprite(&_ftex);
 	

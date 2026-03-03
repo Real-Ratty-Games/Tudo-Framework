@@ -32,7 +32,7 @@ bool Initialize()
 	Renderer::LoadTextureFromFile(_tex, "box.png", BGFX_SAMPLER_MIN_POINT |
 		BGFX_SAMPLER_MAG_POINT |
 		BGFX_SAMPLER_U_CLAMP |
-		BGFX_SAMPLER_V_CLAMP, "tex", false);
+		BGFX_SAMPLER_V_CLAMP, "tex", false, true);
 }
 
 void Tick()
