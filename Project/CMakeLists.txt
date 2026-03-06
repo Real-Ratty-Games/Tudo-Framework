@@ -53,8 +53,8 @@ if (WIN32)
 	)
 else()
 	set_target_properties(Assimp::Assimp PROPERTIES
-		IMPORTED_LOCATION_DEBUG   "${CMAKE_SOURCE_DIR}/Thirdparty/arm64/Debug/libassimpd.6.0.4.dylib"
-		IMPORTED_LOCATION_RELEASE "${CMAKE_SOURCE_DIR}/Thirdparty/arm64/Release/libassimp.6.0.4.dylib"
+		IMPORTED_LOCATION_DEBUG   "${CMAKE_SOURCE_DIR}/Thirdparty/arm64/Debug_m3dc/libassimpd.6.0.4.dylib"
+		IMPORTED_LOCATION_RELEASE "${CMAKE_SOURCE_DIR}/Thirdparty/arm64/Release_m3dc/libassimp.6.0.4.dylib"
 		INTERFACE_INCLUDE_DIRECTORIES "${CMAKE_SOURCE_DIR}/Thirdparty/Inc"
 	)
 endif()
