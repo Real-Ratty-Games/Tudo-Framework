@@ -190,6 +190,9 @@ std::vector<uint8> WADMaker_GetFiletypesinDir(strgv filepath)
 		"dds", "DDS", "Dds",
 		"gif", "GIF", "Gif",
 		"tga", "TGA", "Tga"
+		"ktx", "KTX", "Ktx"
+		"ktx2", "KTX2", "Ktx2"
+		"pvr", "PVR", "Pvr"
 	};
 
 	std::vector<strg> sound_ext = {
@@ -212,7 +215,8 @@ std::vector<uint8> WADMaker_GetFiletypesinDir(strgv filepath)
 		"3ds", "3DS",
 		"dae", "DAE", "Dae",
 		"gltf", "GLTF", "Gltf",
-		"glb", "GLB", "Glb"
+		"glb", "GLB", "Glb",
+		"m3d", "M3D", "M3d"
 	};
 
 	if (std::filesystem::exists(filepath))

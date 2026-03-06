@@ -8,6 +8,7 @@ set(COREFILES_HEADER "Include/Alarm.hpp"
 "Include/Clock.hpp"
 "Include/DebugHelp.hpp"
 "Include/FileSystem.hpp"
+"Include/Globals.hpp"
 "Include/IniFile.hpp"
 "Include/Program.hpp"
 "Include/SystemTypes.hpp"
@@ -89,7 +90,6 @@ source_group("OS/Src/" FILES ${OSFILES_SOURCE})
 # Thirdparty
 target_link_libraries(GameEngine PRIVATE SoLoud::SoLoud)
 target_link_libraries(GameEngine PRIVATE SDL3::SDL3)
-target_link_libraries(GameEngine PRIVATE Assimp::Assimp)
 target_link_libraries(GameEngine PRIVATE bgfx::bgfx)
 target_link_libraries(GameEngine PRIVATE bx::bx)
 target_link_libraries(GameEngine PRIVATE bimg::bimg)

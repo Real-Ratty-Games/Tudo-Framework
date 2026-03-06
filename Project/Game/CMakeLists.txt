@@ -11,7 +11,6 @@ endif()
 # Thirdparty
 target_link_libraries(Game PRIVATE SoLoud::SoLoud)
 target_link_libraries(Game PRIVATE SDL3::SDL3)
-target_link_libraries(Game PRIVATE Assimp::Assimp)
 target_link_libraries(Game PRIVATE bgfx::bgfx)
 target_link_libraries(Game PRIVATE bx::bx)
 target_link_libraries(Game PRIVATE bimg::bimg)

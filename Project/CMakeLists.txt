@@ -106,3 +106,4 @@ endif()
 
 add_subdirectory ("GameEngine")
 add_subdirectory ("Game")
+add_subdirectory ("M3DC")

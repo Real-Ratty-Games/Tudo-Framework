@@ -3,6 +3,7 @@
 	Created by Norbert Gerberg.
 ======================================================*/
 #include "../Include/Renderer.hpp"
+#include "../Include/Globals.hpp"
 #include "../Include/BigError.hpp"
 #include "../Include/Window.hpp"
 #include "../Include/FileSystem.hpp"
@@ -16,9 +17,6 @@
 #include "../Include/SpriteAnimation.hpp"
 #include "../Include/Math.hpp"
 #include <bx/math.h>
-#include <assimp/Importer.hpp>
-#include <assimp/scene.h>
-#include <assimp/postprocess.h>
 #include <unordered_set>
 #include <fstream>
 #include <sstream>
@@ -33,12 +31,6 @@
 #define GAMEENGINE_RENDERER_SPRITE_STATE (BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A | BGFX_STATE_BLEND_ALPHA | BGFX_STATE_DEPTH_TEST_LESS)
 
 using namespace GameEngine;
-
-struct RawMeshData
-{
-	std::vector<MeshVertex>	Vertices;
-	std::vector<uint16>		Indices;
-};
 
 /// Active instances for rendering
 static Shader*		_ActiveShader		= nullptr;
@@ -58,9 +50,7 @@ static void	Renderer_Init3DLayout();
 static void	Renderer_Init2DQuad();
 static void	Renderer_Release2DQuad();
 static void	Renderer_DrawTexture(Texture* texture, vec2& rotpiv, vec2& size, Transform2D& transformation);
-static void	Renderer_ModelProcessNode(Model3D& model, aiNode* node, const aiScene* scene);
-static void	Renderer_ModelProcessMesh(Mesh3D& modelMesh, aiMesh* mesh, const aiScene* scene);
-static void	Renderer_CreateMesh(Mesh3D& modelMesh, RawMeshData& mdata);
+static void	Renderer_CreateMesh(Mesh3D& modelMesh, MeshData& mdata);
 
 bool Renderer::Initialize(Window* window, DrawAPI api, bool vsync, MSAA msaa)
 {
@@ -452,47 +442,97 @@ void Renderer::LoadModelFromFile(Model3D& model, strgv filename)
 		throw BigError(errmsg);
 	}
 
-	Assimp::Importer importer;
-	uint flags = aiProcess_FlipUVs
-		| aiProcess_Triangulate
-		| aiProcess_GenSmoothNormals
-		| aiProcess_CalcTangentSpace
-		| aiProcess_SplitLargeMeshes
-		| aiProcess_OptimizeMeshes
-		| aiProcess_MakeLeftHanded
-		| aiProcess_FlipWindingOrder;
+	std::ifstream file(filename.data(), std::ios::binary);
+	file.seekg(0, std::ios::beg);
 
-	const aiScene* scene = importer.ReadFile(filename.data(), flags);
+	M3DCHeader header;
+	file.read(reinterpret_cast<char*>(&header), sizeof(M3DCHeader));
 
-	if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
+	if(header.Magic != M3DC_MAGIC)
 	{
-		{
-			const strg errmsg = "Failed loading model: " + strg(filename);
-			throw BigError(errmsg);
-		}
+		const strg errmsg = "Model file format invalid: " + strg(filename);
+		throw BigError(errmsg);
 	}
 
-	Renderer_ModelProcessNode(model, scene->mRootNode, scene);
+	if (header.Version != M3DC_VERSION)
+	{
+		const strg errmsg = "Model file format uses older version: " + strg(filename);
+		throw BigError(errmsg);
+	}
+
+	model.Meshes.resize(header.Amount);
+
+	for (uint64 i = 0; i < header.Amount; i++)
+	{
+		MeshData mdata;
+
+		uint64 vsize;
+		uint64 isize;
+		file.read(reinterpret_cast<char*>(&vsize), sizeof(uint64));
+		file.read(reinterpret_cast<char*>(&isize), sizeof(uint64));
+
+		mdata.VSize = vsize;
+		mdata.ISize = isize;
+
+		mdata.Vertices.resize(vsize);
+		mdata.Indices.resize(isize);
+
+		file.read(reinterpret_cast<char*>(mdata.Vertices.data()), vsize * sizeof(MeshVertex));
+		file.read(reinterpret_cast<char*>(mdata.Indices.data()), isize * sizeof(uint16));
+
+		Renderer_CreateMesh(model.Meshes[i], mdata);
+	}
 }
 
 void Renderer::LoadModelFromMemory(Model3D& model, std::vector<uint8>& data)
 {
-	Assimp::Importer importer;
-	uint flags = aiProcess_FlipUVs
-		| aiProcess_Triangulate
-		| aiProcess_GenSmoothNormals
-		| aiProcess_CalcTangentSpace
-		| aiProcess_SplitLargeMeshes
-		| aiProcess_OptimizeMeshes
-		| aiProcess_MakeLeftHanded
-		| aiProcess_FlipWindingOrder;
+	if (data.empty())
+		throw BigError("Data is empty!");
 
-	const aiScene* scene = importer.ReadFileFromMemory(data.data(), data.size(), flags);
+	const uint8* rdat = data.data();
+	uint64 offset = 0;
 
-	if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
-		throw BigError("Failed loading model!");
+	M3DCHeader header;
+	std::memcpy(&header, rdat + offset, sizeof(M3DCHeader));
+	offset += sizeof(M3DCHeader);
 
-	Renderer_ModelProcessNode(model, scene->mRootNode, scene);
+	if (header.Magic != M3DC_MAGIC)
+		throw BigError("Model file format invalid");
+
+	if (header.Version != M3DC_VERSION)
+		throw BigError("Model file format uses older version");
+
+	model.Meshes.resize(header.Amount);
+
+	for (uint64 i = 0; i < header.Amount; i++)
+	{
+		MeshData mdata;
+
+		uint64 vsize;
+		uint64 isize;
+
+		std::memcpy(&vsize, rdat + offset, sizeof(uint64));
+		offset += sizeof(uint64);
+
+		std::memcpy(&isize, rdat + offset, sizeof(uint64));
+		offset += sizeof(uint64);
+
+		mdata.VSize = vsize;
+		mdata.ISize = isize;
+
+		mdata.Vertices.resize(vsize);
+		mdata.Indices.resize(isize);
+
+		const uint64 vtsize = vsize * sizeof(MeshVertex);
+		std::memcpy(mdata.Vertices.data(), rdat + offset, vtsize);
+		offset += vtsize;
+
+		const uint64 itsize = isize * sizeof(uint16);
+		std::memcpy(mdata.Indices.data(), rdat + offset, itsize);
+		offset += itsize;
+
+		Renderer_CreateMesh(model.Meshes[i], mdata);
+	}
 }
 
 void Renderer::FreeModel(Model3D& model)
@@ -707,74 +747,13 @@ void Renderer_DrawTexture(Texture* texture, vec2& rotpiv, vec2& size, Transform2
 	_ActiveShader->Submit(_ActiveDrawSurface->ViewID(), GAMEENGINE_RENDERER_SPRITE_FLAGS, true);
 }
 
-void Renderer_ModelProcessNode(Model3D& model, aiNode* node, const aiScene* scene)
+void Renderer_CreateMesh(Mesh3D& modelMesh, MeshData& mdata)
 {
-	for (uint i = 0; i < node->mNumMeshes; i++)
-	{
-		aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
-		model.Meshes.push_back(Mesh3D());
-		Renderer_ModelProcessMesh(model.Meshes[model.Meshes.size()-1], mesh, scene);
-	}
-
-	for (uint i = 0; i < node->mNumChildren; i++)
-		Renderer_ModelProcessNode(model, node->mChildren[i], scene);
-}
-
-void Renderer_ModelProcessMesh(Mesh3D& modelMesh, aiMesh* mesh, const aiScene* scene)
-{
-	RawMeshData result;
-	result.Vertices.resize(mesh->mNumVertices);
-
-	for (uint i = 0; i < mesh->mNumVertices; i++)
-	{
-		MeshVertex& vertex = result.Vertices[i];
-
-		vertex.X = mesh->mVertices[i].x;
-		vertex.Y = mesh->mVertices[i].y;
-		vertex.Z = mesh->mVertices[i].z;
-
-		if (mesh->HasNormals())
-		{
-			vertex.NX = mesh->mNormals[i].x;
-			vertex.NY = mesh->mNormals[i].y;
-			vertex.NZ = mesh->mNormals[i].z;
-		}
-
-		if (mesh->HasTextureCoords(0))
-		{
-			vertex.U = mesh->mTextureCoords[0][i].x;
-			vertex.V = mesh->mTextureCoords[0][i].y;
-		}
-
-		if (mesh->HasTangentsAndBitangents())
-		{
-			vertex.TX = mesh->mTangents[i].x;
-			vertex.TY = mesh->mTangents[i].y;
-			vertex.TZ = mesh->mTangents[i].z;
-
-			vertex.BX = mesh->mBitangents[i].x;
-			vertex.BY = mesh->mBitangents[i].y;
-			vertex.BZ = mesh->mBitangents[i].z;
-		}
-	}
-
-	for (uint i = 0; i < mesh->mNumFaces; i++)
-	{
-		aiFace face = mesh->mFaces[i];
-		for (uint j = 0; j < face.mNumIndices; j++)
-			result.Indices.push_back(face.mIndices[j]);
-	}
-
-	Renderer_CreateMesh(modelMesh, result);
-}
-
-void Renderer_CreateMesh(Mesh3D& modelMesh, RawMeshData& mdata)
-{
-	modelMesh.VBH = Renderer::CreateVertexBuffer(mdata.Vertices.data(), (uint)mdata.Vertices.size() * sizeof(MeshVertex), _Mesh3DVBLayout);
+	modelMesh.VBH = Renderer::CreateVertexBuffer(mdata.Vertices.data(), mdata.VSize * sizeof(MeshVertex), _Mesh3DVBLayout);
 	if (!bgfx::isValid(modelMesh.VBH))
 		throw BigError("Vertex Buffer is invalid!");
 
-	modelMesh.IBH = Renderer::CreateIndexBuffer(mdata.Indices.data(), (uint)mdata.Indices.size() * sizeof(uint16));
+	modelMesh.IBH = Renderer::CreateIndexBuffer(mdata.Indices.data(), mdata.ISize * sizeof(uint16));
 	if (!bgfx::isValid(modelMesh.IBH))
 		throw BigError("Index Buffer is invalid!");
 }

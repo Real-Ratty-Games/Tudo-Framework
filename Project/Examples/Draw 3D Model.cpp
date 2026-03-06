@@ -19,7 +19,7 @@ void OnResize(vec2i& size)
 
 bool Initialize()
 {
-	_3DSurface 	= new DrawSurface3D(1, resolution, nullptr);
+	_3DSurface 	= new DrawSurface3D(1, resolution, nullptr, false);
 	_3dsprite 	= new Sprite(&_3DSurface->GetTexture());
 	
 	_MeshShader.Initialize("Mesh3D");
@@ -27,7 +27,7 @@ bool Initialize()
 	
 	_viewport.CreateView();
 	
-	Renderer::LoadModelFromFile(_model, "box.obj");
+	Renderer::LoadModelFromFile(_model, "box.m3d");
 	
 	Renderer::LoadTextureFromFile(_tex, "box.png", BGFX_SAMPLER_MIN_POINT |
 		BGFX_SAMPLER_MAG_POINT |
@@ -102,9 +102,14 @@ void Cleanup()
 	Renderer::FreeModel(_model);
 	Renderer::FreeTexture(_tex);
 	
+	if(_3dsprite != nullptr)
+		delete _3dsprite;
+	
 	if (_3DSurface != nullptr)
 	{
 		_3DSurface->Release();
 		delete _3DSurface;
 	}
+	
+	_MeshShader.Release();
 }

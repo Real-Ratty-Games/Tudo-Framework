@@ -121,33 +121,6 @@ namespace GameEngine
 		vec2	GlyphSize;
 	};
 
-	struct MeshVertex
-	{
-		// Position
-		float X;
-		float Y;
-		float Z;
-
-		// Normal
-		float NX;
-		float NY;
-		float NZ;
-
-		// TexCoord
-		float U;
-		float V;
-
-		// Tangent
-		float TX;
-		float TY;
-		float TZ;
-
-		// Bitangent
-		float BX;
-		float BY;
-		float BZ;
-	};
-
 	struct Mesh3D
 	{
 		bgfx::VertexBufferHandle	VBH;

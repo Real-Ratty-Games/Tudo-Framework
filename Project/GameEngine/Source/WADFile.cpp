@@ -20,7 +20,6 @@ void WADFile::Open(strgv filepath)
 	mFilepath = filepath;
 
 	std::ifstream file(mFilepath.data(), std::ios::binary | std::ios::ate);
-	std::streamsize size = file.tellg();
 	file.seekg(0, std::ios::beg);
 
 	uint fileCnt = 0;
