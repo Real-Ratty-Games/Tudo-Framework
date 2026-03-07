@@ -43,7 +43,7 @@ namespace GameEngine
 		float BX;
 		float BY;
 		float BZ;
-	};
+	}; // GAMEENGINE_RENDERER_M3D_VERTEXLAYOUT
 
 	struct MeshData
 	{

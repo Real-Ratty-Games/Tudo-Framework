@@ -41,8 +41,15 @@ namespace GameEngine
 		bgfx::VertexBufferHandle CreateVertexBuffer(const void* data, uint size, bgfx::VertexLayout& layout);
 		bgfx::IndexBufferHandle CreateIndexBuffer(const void* data, uint size);
 
+		// For uncompressed textures
 		void LoadTextureFromFile(Texture& texture, strgv filename, uint64 flags, strgv texturename, bool flipUV, bool mipgen);
 		void LoadTextureFromMemory(Texture& texture, std::vector<uint8>& memData, uint64 flags, strgv texturename, bool flipUV, bool mipgen);
+
+		// For GPU friendly textures
+		// DDS on Windows and KTX on macOS
+		void LoadGPUTextureFromFile(Texture& texture, strgv filename, uint64 flags, strgv texturename);
+		void LoadGPUTextureFromMemory(Texture& texture, std::vector<uint8>& memData, uint64 flags, strgv texturename);
+
 		void FreeTexture(Texture& tex);
 
 		void SetActiveShader(Shader* shader);

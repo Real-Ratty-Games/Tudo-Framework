@@ -17,6 +17,9 @@
 #include "../Include/SpriteAnimation.hpp"
 #include "../Include/Math.hpp"
 #include <bx/math.h>
+#include <bx/allocator.h>
+#include <bimg/bimg.h>
+#include <bimg/decode.h>
 #include <unordered_set>
 #include <fstream>
 #include <sstream>
@@ -29,6 +32,13 @@
 
 #define GAMEENGINE_RENDERER_SPRITE_FLAGS (BGFX_DISCARD_INDEX_BUFFER | BGFX_DISCARD_STATE | BGFX_DISCARD_TRANSFORM)
 #define GAMEENGINE_RENDERER_SPRITE_STATE (BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A | BGFX_STATE_BLEND_ALPHA | BGFX_STATE_DEPTH_TEST_LESS)
+
+#define GAMEENGINE_RENDERER_M3D_VERTEXLAYOUT \
+	.add(bgfx::Attrib::Position, 3, bgfx::AttribType::Float)	\
+	.add(bgfx::Attrib::Normal, 3, bgfx::AttribType::Float)		\
+	.add(bgfx::Attrib::TexCoord0, 2, bgfx::AttribType::Float)	\
+	.add(bgfx::Attrib::Tangent, 3, bgfx::AttribType::Float)		\
+	.add(bgfx::Attrib::Bitangent, 3, bgfx::AttribType::Float)	\
 
 using namespace GameEngine;
 
@@ -45,6 +55,7 @@ static Texture*					_Quad2DLastTex = nullptr; // don't update sample if it's the
 
 static inline void Renderer_LoadTexture(Texture& texture, uint8* data, uint64 flags, int nrComponents,
 	strgv texturename, int width, int height, bool mipgen);
+static inline void Renderer_LoadGPUTexture(Texture& texture, std::vector<uint8>& data, uint64 flags, strgv texturename);
 static inline void Renderer_ClearActives();
 static void	Renderer_Init3DLayout();
 static void	Renderer_Init2DQuad();
@@ -167,6 +178,31 @@ void Renderer::LoadTextureFromMemory(Texture& texture, std::vector<uint8>& memDa
 	}
 
 	Renderer_LoadTexture(texture, data, flags, nrComponents, texturename, width, height, mipgen);
+}
+
+void Renderer::LoadGPUTextureFromFile(Texture& texture, strgv filename, uint64 flags, strgv texturename)
+{
+	std::ifstream file(filename.data(), std::ios::binary);
+	if (!file)
+	{
+		const strg errmsg = "Failed loading GPU texture from file: " + strg(filename);
+		throw BigError(errmsg);
+	}
+
+	file.seekg(0, std::ios::end);
+	const uint64 size = file.tellg();
+	file.seekg(0, std::ios::beg);
+
+	std::vector<uint8> data(size);
+	file.read(reinterpret_cast<char*>(data.data()), size);
+	file.close();
+
+	Renderer_LoadGPUTexture(texture, data, flags, texturename);
+}
+
+void Renderer::LoadGPUTextureFromMemory(Texture& texture, std::vector<uint8>& memData, uint64 flags, strgv texturename)
+{
+	Renderer_LoadGPUTexture(texture, memData, flags, texturename);
 }
 
 void Renderer::FreeTexture(Texture& tex)
@@ -436,13 +472,13 @@ void Renderer::DrawSpriteAnimation(Sprite* sprite, Transform2D& transformation, 
 
 void Renderer::LoadModelFromFile(Model3D& model, strgv filename)
 {
-	if (!FileSystem::Exists(filename))
+	std::ifstream file(filename.data(), std::ios::binary);
+	if (!file)
 	{
 		const strg errmsg = "Model file could not be found: " + strg(filename);
 		throw BigError(errmsg);
 	}
 
-	std::ifstream file(filename.data(), std::ios::binary);
 	file.seekg(0, std::ios::beg);
 
 	M3DCHeader header;
@@ -664,6 +700,41 @@ inline void Renderer_LoadTexture(Texture& texture, uint8* data, uint64 flags, in
 	stbi_set_flip_vertically_on_load(false);
 }
 
+inline void Renderer_LoadGPUTexture(Texture& texture, std::vector<uint8>& data, uint64 flags, strgv texturename)
+{
+	bx::DefaultAllocator allc;
+#if __APPLE__
+	bimg::ImageContainer* ic = bimg::imageParseKtx(&allc, data.data(), data.size(), nullptr);
+#else
+	bimg::ImageContainer* ic = bimg::imageParseDds(&allc, data.data(), data.size(), nullptr);
+#endif
+	if (!ic)
+	{
+		const strg errmsg = "Failed parsing GPU texture into container: " + strg(texturename);
+		throw BigError(errmsg);
+	}
+
+	texture.Handle = bgfx::createTexture2D(
+		static_cast<uint16>(ic->m_width),
+		static_cast<uint16>(ic->m_height),
+		(ic->m_numMips > 0),
+		ic->m_numLayers,
+		(bgfx::TextureFormat::Enum)ic->m_format,
+		flags,
+		bgfx::copy(ic->m_data, ic->m_size));
+
+	if (bgfx::isValid(texture.Handle))
+		bgfx::setName(texture.Handle, texturename.data());
+	else
+	{
+		const strg errmsg = "Failed loading GPU texture: " + strg(texturename);
+		throw BigError(errmsg);
+	}
+
+	texture.Size = vec2i(ic->m_width, ic->m_height);
+	bimg::imageFree(ic);
+}
+
 inline void Renderer_ClearActives()
 {
 	_ActiveShader = nullptr;
@@ -673,11 +744,7 @@ inline void Renderer_ClearActives()
 void Renderer_Init3DLayout()
 {
 	_Mesh3DVBLayout.begin()
-		.add(bgfx::Attrib::Position, 3, bgfx::AttribType::Float)
-		.add(bgfx::Attrib::Normal, 3, bgfx::AttribType::Float)
-		.add(bgfx::Attrib::TexCoord0, 2, bgfx::AttribType::Float)
-		.add(bgfx::Attrib::Tangent, 3, bgfx::AttribType::Float)
-		.add(bgfx::Attrib::Bitangent, 3, bgfx::AttribType::Float)
+		GAMEENGINE_RENDERER_M3D_VERTEXLAYOUT
 		.end();
 }
 
