@@ -1,18 +1,6 @@
-/*======================================================
-	Copyright (c) 2026 Real Ratty Games.
-	Created by Norbert Gerberg.
-======================================================*/
-#include "../Include/Game.hpp"
-#include "../Include/GameWindow.hpp"
-#include <FileSystem.hpp>
-#include <Renderer.hpp>
-#include <Input.hpp>
-
 #include <Network.hpp>
 #include <NetServerTCP.hpp>
 #include <NetClientTCP.hpp>
-
-using namespace MyGame;
 
 class MyServer : public NetServerTCP
 {
@@ -57,45 +45,22 @@ public:
 	}
 };
 
-void GameProgram::OnResize(vec2i& size)
-{
-	// EMPTY
-}
-
 static MyServer _inst;
 // static MyClient _inst;
 
-bool GameProgram::Initialize()
+void Initialize()
 {
-	// create window
-	Window::Initialize();
-
-	const vec2 resolution(1280, 720);
-
-	mWindow = new GameWindow(this);
-	mWindow->Create("Server", (uint)resolution.X, (uint)resolution.Y, false);
-
 	Network::Initialize();
 	_inst.Initialize(54000, "0.0.0.0");
-
-	mWindow->Show();
-	return true;
 }
 
-void GameProgram::Tick()
+void Tick()
 {
 	_inst.Run();
 }
 
-void GameProgram::Cleanup()
+void Cleanup()
 {
-	if (mWindow != nullptr)
-	{
-		delete mWindow;
-		mWindow = nullptr;
-	}
-	Window::Release();
-
 	_inst.Release();
 	Network::Release();
 }

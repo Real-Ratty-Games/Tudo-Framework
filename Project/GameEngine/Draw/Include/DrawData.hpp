@@ -68,12 +68,6 @@ namespace GameEngine
 		int							MissedAmount; // Amount of instances not rendered due to hardware limitations
 	};
 
-	struct Texture
-	{
-		bgfx::TextureHandle Handle = BGFX_INVALID_HANDLE;
-		vec2i				Size;
-	};
-
 	struct Viewport2D
 	{
 		vec2 Location;

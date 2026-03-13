@@ -4,6 +4,7 @@
 ======================================================*/
 #include "Sprite.hpp"
 #include "BigError.hpp"
+#include "Texture.hpp"
 
 using namespace GameEngine;
 
@@ -12,7 +13,7 @@ Sprite::Sprite(Texture* texture)
 	if (texture == nullptr)
 		throw BigError("Sprite creation failed: Texture cannot be nullptr!");
 	pTexture	= texture;
-	Size		= pTexture->Size;
+	Size		= pTexture->Size();
 }
 
 void Sprite::SetTexture(Texture* texture)

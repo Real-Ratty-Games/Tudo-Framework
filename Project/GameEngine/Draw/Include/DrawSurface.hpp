@@ -5,8 +5,10 @@
 #ifndef DRAWSURFACE_HPP_
 #define DRAWSURFACE_HPP_
 #include "SystemTypes.hpp"
+#include "Memory.hpp"
 #include "DrawObject.hpp"
 #include "DrawData.hpp"
+#include "Texture.hpp"
 
 namespace GameEngine
 {
@@ -20,7 +22,7 @@ namespace GameEngine
 		void Clear();
 		void OnResize(vec2 size);
 		uint16 ViewID() const;
-		Texture& GetTexture();
+		Texture* GetTexture();
 
 	protected:
 		void DestroyFB();
@@ -37,7 +39,7 @@ namespace GameEngine
 
 	protected:
 		bgfx::FrameBufferHandle mFbHandle;
-		Texture					mFbTex;
+		SafePtr<Texture>		mFbTex;
 
 		uint16					mViewId;
 		void*					pWindowHandle;

@@ -9,6 +9,8 @@
 
 namespace GameEngine
 {
+	class Texture;
+
 	/// <summary>
 	/// 2D Quad Sprite
 	/// </summary>

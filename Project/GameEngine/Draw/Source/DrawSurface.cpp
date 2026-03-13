@@ -20,6 +20,8 @@ DrawSurface::DrawSurface(Renderer* renderer, uint16 viewid, vec2 size, void* wnd
 	mViewId = viewid;
 	pWindowHandle = wndHandle;
 
+	mFbTex = new Texture(renderer);
+
 	bgfx::setViewMode(mViewId, bgfx::ViewMode::Sequential);
 
 	mFbHandle = BGFX_INVALID_HANDLE;
@@ -67,9 +69,9 @@ uint16 DrawSurface::ViewID() const
 	return mViewId;
 }
 
-Texture& DrawSurface::GetTexture()
+Texture* DrawSurface::GetTexture()
 {
-	return mFbTex;
+	return mFbTex.Get();
 }
 
 void DrawSurface::SetFBViewId()

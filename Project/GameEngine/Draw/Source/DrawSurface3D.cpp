@@ -18,9 +18,9 @@ DrawSurface3D::DrawSurface3D(Renderer* renderer, uint16 viewid, vec2 size, void*
 	}
 }
 
-Texture& DrawSurface3D::GetDepthTexture()
+Texture* DrawSurface3D::GetDepthTexture()
 {
-	return mFbDepthTex;
+	return mFbDepthTex.Get();
 }
 
 void DrawSurface3D::UpdateFB(vec2i texSize, bgfx::TextureFormat::Enum format)
@@ -33,7 +33,7 @@ void DrawSurface3D::UpdateFB(vec2i texSize, bgfx::TextureFormat::Enum format)
 		{
 			if (bDepthOnly)
 			{
-				mFbDepthTex.Handle = bgfx::createTexture2D(
+				mFbDepthTex->mHandle = bgfx::createTexture2D(
 					(uint16)texSize.X
 					, (uint16)texSize.Y
 					, false
@@ -41,9 +41,9 @@ void DrawSurface3D::UpdateFB(vec2i texSize, bgfx::TextureFormat::Enum format)
 					, bgfx::TextureFormat::D32F
 					, BGFX_TEXTURE_RT | BGFX_SAMPLER_COMPARE_LEQUAL
 				);
-				mFbDepthTex.Size = texSize;
+				mFbDepthTex->mSize = texSize;
 
-				mFbHandle = bgfx::createFrameBuffer(1, &mFbDepthTex.Handle, true);
+				mFbHandle = bgfx::createFrameBuffer(1, &mFbDepthTex->mHandle, true);
 			}
 			else
 			{
@@ -68,11 +68,11 @@ void DrawSurface3D::UpdateFB(vec2i texSize, bgfx::TextureFormat::Enum format)
 					)
 				};
 
-				mFbTex.Handle = fbtextures[0];
-				mFbTex.Size = texSize;
+				mFbTex->mHandle = fbtextures[0];
+				mFbTex->mSize = texSize;
 
-				mFbDepthTex.Handle = fbtextures[1];
-				mFbDepthTex.Size = texSize;
+				mFbDepthTex->mHandle = fbtextures[1];
+				mFbDepthTex->mSize = texSize;
 
 				mFbHandle = bgfx::createFrameBuffer(BX_COUNTOF(fbtextures), fbtextures, true);
 			}

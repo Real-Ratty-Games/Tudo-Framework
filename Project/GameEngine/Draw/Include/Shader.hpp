@@ -12,6 +12,7 @@
 namespace GameEngine
 {
 	class Renderer;
+	class Texture;
 
 	/// <summary>
 	/// Manages a shader

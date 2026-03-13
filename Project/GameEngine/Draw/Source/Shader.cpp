@@ -5,6 +5,7 @@
 #include "Shader.hpp"
 #include "FileSystem.hpp"
 #include "BigError.hpp"
+#include "Texture.hpp"
 #include <vector>
 #include <sstream>
 #include <filesystem>
@@ -149,7 +150,7 @@ void Shader::SetUniform(strgv name, const void* vl, uint16 nmb)
 
 void Shader::SetTexture(uint8 stage, strgv name, Texture& texture)
 {
-	bgfx::setTexture(stage, mUniforms[name.data()], texture.Handle);
+	bgfx::setTexture(stage, mUniforms[name.data()], texture.Handle());
 }
 
 bgfx::UniformHandle* Shader::GetUniform(strgv name)

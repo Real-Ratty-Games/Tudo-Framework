@@ -23,7 +23,7 @@ void DrawSurface2D::UpdateFB(vec2i texSize, bgfx::TextureFormat::Enum format)
 			mFbHandle = bgfx::createFrameBuffer(pWindowHandle, texSize.X, texSize.Y, format, bgfx::TextureFormat::D32F);
 		else
 		{
-			mFbTex.Handle = bgfx::createTexture2D(
+			mFbTex->mHandle = bgfx::createTexture2D(
 				(uint16)texSize.X
 				, (uint16)texSize.Y
 				, false
@@ -32,8 +32,8 @@ void DrawSurface2D::UpdateFB(vec2i texSize, bgfx::TextureFormat::Enum format)
 				, BGFX_TEXTURE_RT
 			);
 
-			mFbTex.Size = texSize;
-			mFbHandle = bgfx::createFrameBuffer(1, &mFbTex.Handle, true);
+			mFbTex->mSize = texSize;
+			mFbHandle = bgfx::createFrameBuffer(1, &mFbTex->mHandle, true);
 		}
 	}
 }
