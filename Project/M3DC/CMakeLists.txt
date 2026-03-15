@@ -1,4 +1,4 @@
-file(GLOB_RECURSE SOURCES "Source/*.cpp" "../GameEngine/Core/Source/FileSystem.cpp")
+file(GLOB_RECURSE SOURCES "Source/*.cpp" "../Tudo/Core/Source/FileSystem.cpp")
 
 if (WIN32)
     add_executable (M3DC ${SOURCES})
@@ -9,8 +9,8 @@ else()
 endif()
 
 target_include_directories(M3DC PUBLIC
-  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../GameEngine/Core/Include> $<INSTALL_INTERFACE:Core>
-  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../GameEngine/Math/Include> $<INSTALL_INTERFACE:Math>
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../Tudo/Core/Include> $<INSTALL_INTERFACE:Core>
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../Tudo/Math/Include> $<INSTALL_INTERFACE:Math>
 )
 
 # Thirdparty

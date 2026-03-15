@@ -8,7 +8,7 @@
 #include <Window.hpp>
 #include <Program.hpp>
 
-using namespace GameEngine;
+using namespace Tudo;
 
 namespace MyGame
 {
@@ -21,7 +21,7 @@ namespace MyGame
 		void EventCallback();
 
 	private:
-		Program* pProgram;
+		Program*		pProgram;
 	};
 }
 #endif

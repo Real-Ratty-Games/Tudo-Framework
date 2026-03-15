@@ -5,16 +5,21 @@
 #ifndef GAME_HPP_
 #define GAME_HPP_
 #include <SystemTypes.hpp>
+#include <Memory.hpp>
 #include <Program.hpp>
 #include <Clock.hpp>
 #include <Sound.hpp>
+#include <Renderer.hpp>
+#include <Texture.hpp>
 #include <Shader.hpp>
 #include <Sprite.hpp>
 #include <DrawSurface2D.hpp>
 #include <DrawSurface3D.hpp>
 #include <SpriteAnimation.hpp>
+#include <AssetLoader.hpp>
+#include <WindowCursor.hpp>
 
-using namespace GameEngine;
+using namespace Tudo;
 
 namespace MyGame
 {
@@ -33,21 +38,23 @@ namespace MyGame
 
 	private:
 		void LoadShaders();
-		void FreeShaders();
 
 	private:
-		GameWindow*		mWindow;
-		Clock			mClock = Clock(60.0f);
+		SafePtr<GameWindow>		mWindow;
+		WindowCursor			mCursor;
+		Clock					mClock = Clock(60.0f);
 
-		Sound			mSound;
+		SoundManager			mSound;
 
-		Viewport2D		mCamera;
-		Shader			mSprite2DShader;
-		Shader			mSprite2DIShader;
-		Shader			mSprite2DAtlasShader;
-		Shader			mSprite2DAtlasIShader;
+		SafePtr<AssetLoader>	mAssetLoader;
 
-		DrawSurface2D*	mBackBufferSurface;
+		Renderer				mRenderer;
+		Viewport2D				mCamera;
+		SafePtr<Shader>			mSprite2DShader;
+		SafePtr<Shader>			mSprite2DIShader;
+		SafePtr<Shader>			mSprite2DAtlasShader;
+		SafePtr<Shader>			mSprite2DAtlasIShader;
+		SafePtr<DrawSurface2D>	mBackBufferSurface;
 	};
 }
 #endif

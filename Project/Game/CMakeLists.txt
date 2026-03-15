@@ -40,7 +40,7 @@ if(APPLE)
     )
 endif()
 
-target_link_libraries(Game PRIVATE GameEngine)
+target_link_libraries(Game PRIVATE Tudo)
 if (WIN32)
 	target_link_directories(Game PRIVATE
 			$<$<CONFIG:Debug>:${CMAKE_SOURCE_DIR}/../x64/Debug>
@@ -52,11 +52,12 @@ elseif(APPLE)
 			$<$<CONFIG:Release>:${CMAKE_SOURCE_DIR}/../arm64/Release>
 	)
 endif()
-target_include_directories(Game PRIVATE "../GameEngine/Core/Include"
-"../GameEngine/Draw/Include"
-"../GameEngine/Math/Include"
-"../GameEngine/Net/Include"
-"../GameEngine/OS/Include")
+target_include_directories(Game PRIVATE "../Tudo/Core/Include"
+"../Tudo/Draw/Include"
+"../Tudo/Math/Include"
+"../Tudo/Net/Include"
+"../Tudo/OS/Include"
+"../Tudo/Res/Include")
 
 if (WIN32)
 	set_target_properties(Game PROPERTIES

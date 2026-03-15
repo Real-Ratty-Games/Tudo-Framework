@@ -4,7 +4,7 @@ if (POLICY CMP0141)
   cmake_policy(SET CMP0141 NEW)
 endif()
 
-project ("CppGameKit")
+project ("TudoProject")
 
 if (WIN32)
 	execute_process(COMMAND py build.py
@@ -104,6 +104,7 @@ else()
 	)
 endif()
 
-add_subdirectory ("GameEngine")
+add_subdirectory ("Tudo")
 add_subdirectory ("Game")
 add_subdirectory ("M3DC")
+add_subdirectory ("SHDC")

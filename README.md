@@ -1,8 +1,10 @@
-# C++ Game Kit
-A bare-bones C++ framework for game development.  
+<img width="699" height="232" alt="tudo" src="tudo.png" />   
   
-<img width="1280" height="750" alt="screenshot" src="https://github.com/user-attachments/assets/4e50a2ef-691c-4ba0-85ea-949875abaea0" />
+A lightweight C++ framework for game development.  
 
+##
+<img width="1280" height="750" alt="screenshot" src="https://github.com/user-attachments/assets/4e50a2ef-691c-4ba0-85ea-949875abaea0" />
+  
 ## Supported Platforms
 * Windows 10 x64
 * macOS arm64
@@ -10,19 +12,22 @@ A bare-bones C++ framework for game development.
 ## Building
 * Requires Python to be installed
 * Use CMake to build
-* On macOS, make sure the ```Data``` is inside the app bundles ```Resources``` folder  
+* Use SHDC to compile the shaders
+* On macOS, make sure the ```Data``` is inside the app bundles ```Resources``` folder
   
 Preferably, use VS2022 or XCode.  
+Uses C++20  
   
 ## Features
 * <b>Core</b>
   * INI file reading/writing
-  * Simple binary archive
   * Alarm event system
   * Fixed-timestep clock
+  * Simple smart pointer
 * <b>OS</b>
   * Window management
   * Keyboard, mouse and gamepad input
+  * Audio (via SoLoud)
 * <b>Networking</b>
   * TCP Server/Client
   * UDP Server/Client
@@ -48,10 +53,11 @@ Preferably, use VS2022 or XCode.
     * Sprite sheet animation
     * Sprite font rendering
     * Hardware instancing
-  * Automatic Texture Mipmap Generation
-  * 3D Model loading
   * 3D Scene setup
-  * Custom GPU-Friendly 3D Model Format
+* <b>Resources</b>
+  * Simple binary archive
+  * 3D Model loading (custom GPU-Friendly format)
+  * Automatic Texture Mipmap Generation
 
 ## Third-party libraries used:
 * [stb_image](https://github.com/nothings/stb)
