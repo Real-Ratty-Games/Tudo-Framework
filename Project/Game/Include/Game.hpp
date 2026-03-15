@@ -17,6 +17,7 @@
 #include <DrawSurface3D.hpp>
 #include <SpriteAnimation.hpp>
 #include <AssetLoader.hpp>
+#include <WindowCursor.hpp>
 
 using namespace Tudo;
 
@@ -40,6 +41,7 @@ namespace MyGame
 
 	private:
 		SafePtr<GameWindow>		mWindow;
+		WindowCursor			mCursor;
 		Clock					mClock = Clock(60.0f);
 
 		SoundManager			mSound;

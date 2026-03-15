@@ -6,7 +6,6 @@
 #define GAMEWINDOW_HPP_
 #include <SystemTypes.hpp>
 #include <Window.hpp>
-#include <WindowCursor.hpp>
 #include <Program.hpp>
 
 using namespace Tudo;
@@ -22,7 +21,6 @@ namespace MyGame
 		void EventCallback();
 
 	private:
-		WindowCursor	mCursor;
 		Program*		pProgram;
 	};
 }

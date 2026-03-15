@@ -12,11 +12,10 @@ namespace Tudo
 	class WindowCursor
 	{
 	public:
-		/// format must be bmp
-		void Load(strgv imagePath);
 		~WindowCursor();
 
 		friend class Window;
+		friend class AssetLoader;
 
 	private:
 		SDL_Cursor* mCursor;

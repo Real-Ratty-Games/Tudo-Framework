@@ -61,8 +61,6 @@ vec3 Math::ScreenLocation2WorldLocationPZ(const vec2& screenLocation, const vec2
 	return worldPos;
 }
 
-
-
 vec3 Math::ScreenLocation2WorldLocation(const vec2& screenLocation, const vec2& screenSize,
 	const ViewportOrtho3D& viewport3D)
 {

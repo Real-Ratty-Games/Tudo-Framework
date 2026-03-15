@@ -40,6 +40,10 @@ bool GameProgram::Initialize()
 
 	mAssetLoader = new AssetLoader(&mRenderer, "Data");
 
+	// set hw cursor
+	mAssetLoader->LoadHardwareCursorImage(&mCursor, "Cursor.bmp");
+	mWindow->SetHardwareCursorImage(&mCursor);
+
 	// load shaders
 	LoadShaders();
 

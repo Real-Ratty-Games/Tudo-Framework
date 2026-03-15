@@ -4,17 +4,12 @@
 ======================================================*/
 #include "../Include/GameWindow.hpp"
 #include "../Include/Game.hpp"
-#include <FileSystem.hpp>
 
 using namespace MyGame;
 
 GameWindow::GameWindow(Program* program)
 {
 	pProgram = program;
-
-	const strg cursorPath = FileSystem::GetResourcePath("Data/Cursor.bmp").string();
-	mCursor.Load(cursorPath);
-	SetHardwareCursorImage(&mCursor);
 }
 
 void GameWindow::EventCallback()

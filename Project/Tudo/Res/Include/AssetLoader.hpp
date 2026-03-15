@@ -12,6 +12,7 @@
 
 namespace Tudo
 {
+	class	WindowCursor;
 	class	Renderer;
 	class	Texture;
 	class	Model3D;
@@ -41,6 +42,9 @@ namespace Tudo
 		void LoadSoundFromMemory(SoundWav& obj, std::vector<uint8>& data);
 
 		void LoadShader(Shader* shader, strgv rootFolder, strgv shadername);
+
+		/// file must be bmp
+		void LoadHardwareCursorImage(WindowCursor* cursor, strgv filename);
 
 	private:
 		void LoadTexture(Texture* texture, uint8* data, uint64 flags, int nrComponents,
