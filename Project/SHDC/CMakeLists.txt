@@ -1,4 +1,4 @@
-file(GLOB_RECURSE SOURCES "Source/*.cpp" "../Tudo/Core/Source/FileSystem.cpp")
+file(GLOB_RECURSE SOURCES "Source/*.cpp" "Include/*.hpp" "../Tudo/Core/Source/FileSystem.cpp")
 
 if (WIN32)
     add_executable (SHDC ${SOURCES})
@@ -8,9 +8,15 @@ else()
     add_executable(SHDC MACROS ${SOURCES})
 endif()
 
+# Thirdparty
+target_link_libraries(SHDC PRIVATE bgfx::bgfx)
+target_link_libraries(SHDC PRIVATE bx::bx)
+target_link_libraries(SHDC PRIVATE bimg::bimg)
+
 target_include_directories(SHDC PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../Tudo/Core/Include> $<INSTALL_INTERFACE:Core>
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../Tudo/Math/Include> $<INSTALL_INTERFACE:Math>
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/Include> $<INSTALL_INTERFACE:TInc>
 )
 
 if (WIN32)

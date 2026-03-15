@@ -10,6 +10,7 @@
 #include <vector>
 #include "SystemTypes.hpp"
 #include "FileSystem.hpp"
+#include "Shaderc.hpp"
 
 using namespace Tudo;
 
@@ -85,7 +86,7 @@ strg CompileShader(strgv args)
 
 	return output.str();
 }
-
+// bgfx::compileShader(_argc, _argv)
 strg CompileAllShaders(strgv sdir, strgv dir)
 {
 	const strg ssdir(sdir);
