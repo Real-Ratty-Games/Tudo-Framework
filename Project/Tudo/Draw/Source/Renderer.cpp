@@ -3,29 +3,15 @@
 	Created by Norbert Gerberg.
 ======================================================*/
 #include "Renderer.hpp"
+#include "BigError.hpp"
 #include "GraphicsDevice.hpp"
-#include "DrawSurface.hpp"
-#include "Shader.hpp"
+#include "DrawPipeline.hpp"
 
 using namespace Tudo;
 
-Renderer::Renderer(GraphicsDevice* gdevice) : DrawObject(gdevice)
+Renderer::Renderer(GraphicsDevice* gdevice, DrawPipeline* pipeline) : DrawObject(gdevice)
 {
-	ClearActives();
-}
-
-void Renderer::SetActiveShader(Shader* shader)
-{
-	pActiveShader = shader;
-}
-
-void Renderer::SetActiveSurface(DrawSurface* surface)
-{
-	pActiveDrawSurface = surface;
-}
-
-void Renderer::ClearActives()
-{
-	pActiveShader		= nullptr;
-	pActiveDrawSurface	= nullptr;
+	if (!pipeline)
+		throw BigError("Instance requires a DrawPipeline!");
+	pPipeline = pipeline;
 }

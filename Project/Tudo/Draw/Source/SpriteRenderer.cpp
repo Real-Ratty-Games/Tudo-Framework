@@ -4,6 +4,7 @@
 ======================================================*/
 #include "SpriteRenderer.hpp"
 #include "GraphicsDevice.hpp"
+#include "DrawPipeline.hpp"
 #include "DrawSurface2D.hpp"
 #include "Sprite.hpp"
 #include "SpriteAnimation.hpp"
@@ -12,7 +13,7 @@
 
 using namespace Tudo;
 
-SpriteRenderer::SpriteRenderer(GraphicsDevice* gdevice) : Renderer(gdevice)
+SpriteRenderer::SpriteRenderer(GraphicsDevice* gdevice, DrawPipeline* pipeline) : Renderer(gdevice, pipeline)
 {
 	pQuad2DLastTex		= nullptr;
 
@@ -21,21 +22,20 @@ SpriteRenderer::SpriteRenderer(GraphicsDevice* gdevice) : Renderer(gdevice)
 	mQuad2DView = Math::LookAtLH(eye, target, vec3(.0f, .1f, .0f));
 }
 
-void SpriteRenderer::BeginDrawSprite(DrawSurface2D* surface, Viewport2D& viewport)
+void SpriteRenderer::BeginDrawSprite(Viewport2D& viewport)
 {
-	pActiveDrawSurface = surface;
-	pActiveDrawSurface->Clear();
+	DrawSurface* surface = pPipeline->GetActiveDrawSurface();
+	surface->Clear();
 
 	mat4 proj = Math::ProjectOrthoLH(viewport.Location.X, viewport.Size.X + viewport.Location.Y,
 		viewport.Size.Y + viewport.Location.Y, viewport.Location.Y, 0.1f, 100.0f, 0.0f);
 
-	bgfx::setViewTransform(pActiveDrawSurface->ViewID(), mQuad2DView.Ptr(), proj.Ptr());
+	bgfx::setViewTransform(surface->ViewID(), mQuad2DView.Ptr(), proj.Ptr());
 	bgfx::setVertexBuffer(0, pGDevice->GetQuadVertexHandle());
 }
 
 void SpriteRenderer::EndDrawSprite()
 {
-	ClearActives();
 	pQuad2DLastTex = nullptr;
 }
 
@@ -49,7 +49,7 @@ void SpriteRenderer::DrawSpriteAtlas(Sprite* sprite, TransformAtlas2D& transform
 	vec4 atinf[2];
 	atinf[0] = vec4(transformation.Index.X, transformation.Index.Y, sprite->Size.X, sprite->Size.Y);
 	atinf[1] = vec4(subSize.X, subSize.Y, 1.0f, 0.0f);
-	pActiveShader->SetUniform("atlasInfo", atinf, 2);
+	pPipeline->GetActiveShader()->SetUniform("atlasInfo", atinf, 2);
 	DrawTexture(sprite->GetTexture(), sprite->RotationPivot, subSize, transformation);
 }
 
@@ -89,7 +89,7 @@ void SpriteRenderer::PrepareSpriteInstancing(Sprite* sprite, SpriteInstanceData&
 		Memory::Copy(data, _mtx, insStride);
 		data += 64;
 
-		vec4 color = vec4(transf.ImageColor.R, transf.ImageColor.G, transf.ImageColor.B, transf.ImageColor.A);
+		vec4 color = transf.ImageColor.ToVec();
 		Memory::Copy(data, color.Ptr(), sizeof(vec4));
 		data += sizeof(vec4);
 	}
@@ -146,6 +146,8 @@ void SpriteRenderer::PrepareSpriteAtlasInstancing(Sprite* sprite, SpriteInstance
 
 void SpriteRenderer::DrawSpriteInstanced(SpriteInstanceData& idata)
 {
+	Shader* shader = pPipeline->GetActiveShader();
+
 	bgfx::setState(TUDO_RENDERER_SPRITE_STATE);
 	bgfx::setInstanceDataBuffer(&idata.Buffer);
 
@@ -153,10 +155,10 @@ void SpriteRenderer::DrawSpriteInstanced(SpriteInstanceData& idata)
 	if (pQuad2DLastTex != usetex)
 	{
 		pQuad2DLastTex = usetex;
-		pActiveShader->SetTexture(0, "s_texColor", *usetex);
+		shader->SetTexture(0, "s_texColor", *usetex);
 	}
 
-	pActiveShader->Submit(pActiveDrawSurface->ViewID(), TUDO_RENDERER_SPRITE_FLAGS, true);
+	shader->Submit(pPipeline->GetActiveDrawSurface()->ViewID(), TUDO_RENDERER_SPRITE_FLAGS, true);
 }
 
 void SpriteRenderer::DrawSpriteAtlasInstanced(SpriteInstanceData& idata, Sprite* sprite, vec2 subSize)
@@ -164,7 +166,7 @@ void SpriteRenderer::DrawSpriteAtlasInstanced(SpriteInstanceData& idata, Sprite*
 	vec4 atinf[2];
 	atinf[0] = vec4(0.0f, 0.0f, sprite->Size.X, sprite->Size.Y);
 	atinf[1] = vec4(subSize.X, subSize.Y, 1.0f, 0.0f);
-	pActiveShader->SetUniform("atlasInfo", atinf, 2);
+	pPipeline->GetActiveShader()->SetUniform("atlasInfo", atinf, 2);
 	DrawSpriteInstanced(idata);
 }
 
@@ -258,10 +260,12 @@ void SpriteRenderer::DrawSpriteAnimation(Sprite* sprite, Transform2D& transforma
 
 void SpriteRenderer::DrawTexture(Texture* texture, vec2& rotpiv, vec2& size, Transform2D& transformation)
 {
+	Shader* shader = pPipeline->GetActiveShader();
+
 	if (pQuad2DLastTex != texture)
 	{
 		pQuad2DLastTex = texture;
-		pActiveShader->SetTexture(0, "s_texColor", *texture);
+		shader->SetTexture(0, "s_texColor", *texture);
 	}
-	pGDevice->DrawTexture(pActiveShader, pActiveDrawSurface, texture, rotpiv, size, transformation);
+	pGDevice->DrawTexture(shader, pPipeline->GetActiveDrawSurface(), texture, rotpiv, size, transformation);
 }

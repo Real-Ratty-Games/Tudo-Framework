@@ -2,27 +2,23 @@
 	Copyright (c) 2026 Real Ratty Games.
 	Created by Norbert Gerberg.
 ======================================================*/
-#ifndef UNLITRENDERER_HPP_
-#define UNLITRENDERER_HPP_
+#ifndef BILLBOARDRENDERER_HPP_
+#define BILLBOARDRENDERER_HPP_
 #include "SystemTypes.hpp"
 #include "DrawData.hpp"
-#include "ModelRenderer.hpp"
+#include "Renderer.hpp"
 
 namespace Tudo
 {
 	class GraphicsDevice;
+	class DrawPipeline;
 	class Texture;
-	class Mesh3D;
 
-	class UnlitRenderer : public ModelRenderer
+	class BillboardRenderer : public Renderer
 	{
 	public:
-		UnlitRenderer(GraphicsDevice* gdevice);
-		void DrawMesh(const Mesh3D& mesh);
-		void SetTexture(Texture* texture);
-
-	private:
-		Texture* pTexture;
+		BillboardRenderer(GraphicsDevice* gdevice, DrawPipeline* pipeline);
+		void Draw(Texture* texture, vec2 scale, Color color, bool alt);
 	};
 }
 #endif

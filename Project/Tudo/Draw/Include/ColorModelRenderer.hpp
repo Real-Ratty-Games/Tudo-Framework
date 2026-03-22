@@ -2,25 +2,27 @@
 	Copyright (c) 2026 Real Ratty Games.
 	Created by Norbert Gerberg.
 ======================================================*/
-#ifndef MODELRENDERER_HPP_
-#define MODELRENDERER_HPP_
+#ifndef COLORMODELENDERER_HPP_
+#define COLORMODELENDERER_HPP_
 #include "SystemTypes.hpp"
 #include "DrawData.hpp"
-#include "Renderer.hpp"
+#include "ModelRenderer.hpp"
 
 namespace Tudo
 {
 	class GraphicsDevice;
 	class DrawPipeline;
-	class Model3D;
+	class Mesh3D;
 
-	class ModelRenderer : public Renderer
+	class ColorModelRenderer : public ModelRenderer
 	{
 	public:
-		ModelRenderer(GraphicsDevice* gdevice, DrawPipeline* pipeline);
+		ColorModelRenderer(GraphicsDevice* gdevice, DrawPipeline* pipeline);
+		void DrawMesh(const Mesh3D& mesh);
+		void SetColor(Color color);
 
-		void			DrawModel(const Model3D& model);
-		virtual void	DrawMesh(const Mesh3D& mesh) = 0;
+	private:
+		Color mColor;
 	};
 }
 #endif

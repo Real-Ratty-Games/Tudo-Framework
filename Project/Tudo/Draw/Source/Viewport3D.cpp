@@ -12,7 +12,8 @@ Viewport3D::Viewport3D()
 	Fov		= 60.0f;
 	Near	= 0.001f;
 	Far		= 1000.0f;
-	Target	= vec3(0.0f, 0.0f, 1.0f);
+	Target	= vec3(0.0f, 0.0f, 0.0f);
+	Eye		= vec3(0.0f, 0.0f, 1.0f);
 	SceneUp = vec3(0.0f, 1.0f, 0.0f);
 }
 

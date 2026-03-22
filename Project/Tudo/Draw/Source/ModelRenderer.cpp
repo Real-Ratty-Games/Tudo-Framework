@@ -4,11 +4,12 @@
 ======================================================*/
 #include "ModelRenderer.hpp"
 #include "GraphicsDevice.hpp"
+#include "DrawPipeline.hpp"
 #include "Model3D.hpp"
 
 using namespace Tudo;
 
-ModelRenderer::ModelRenderer(GraphicsDevice* gdevice) : Renderer(gdevice) {}
+ModelRenderer::ModelRenderer(GraphicsDevice* gdevice, DrawPipeline* pipeline) : Renderer(gdevice, pipeline) {}
 
 void ModelRenderer::DrawModel(const Model3D& model)
 {

@@ -12,6 +12,7 @@ namespace Tudo
 {
 	class GraphicsDevice;
 	class SpriteAnimator;
+	class DrawPipeline;
 	class DrawSurface2D;
 	class Texture;
 	class Sprite;
@@ -19,9 +20,9 @@ namespace Tudo
 	class SpriteRenderer : public Renderer
 	{
 	public:
-		SpriteRenderer(GraphicsDevice* gdevice);
+		SpriteRenderer(GraphicsDevice* gdevice, DrawPipeline* pipeline);
 
-		void BeginDrawSprite(DrawSurface2D* surface, Viewport2D& viewport);
+		void BeginDrawSprite(Viewport2D& viewport);
 		void EndDrawSprite();
 
 		void DrawSprite(Sprite* sprite, Transform2D& transformation);

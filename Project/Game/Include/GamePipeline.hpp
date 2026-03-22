@@ -10,12 +10,18 @@
 #include <DrawPipeline.hpp>
 #include <GraphicsDevice.hpp>
 #include <SpriteRenderer.hpp>
-#include <UnlitRenderer.hpp>
+#include <UnlitModelRenderer.hpp>
+#include <ColorModelRenderer.hpp>
+#include <BillboardRenderer.hpp>
 #include <DrawSurface2D.hpp>
 #include <Shader.hpp>
 
 #include <Texture.hpp>
 #include <Sprite.hpp>
+
+#include <Model3D.hpp>
+#include <DrawSurface3D.hpp>
+#include <Viewport3D.hpp>
 
 using namespace Tudo;
 
@@ -28,26 +34,38 @@ namespace MyGame
 		void Draw();
 		void OnResize(const vec2& size);
 
+		Viewport3D _vp3d;
+
 	private:
 		void LoadShaders(AssetLoader* assetloader);
 
 	private:
-		Viewport2D				mCamera;
+		Viewport2D					mCamera;
 
-		SafePtr<DrawSurface2D>	mBackBufferSurface;
+		SafePtr<DrawSurface2D>		mBackBufferSurface;
 
-		SafePtr<SpriteRenderer> mSpriteRenderer;
-		SafePtr<UnlitRenderer>	mUnlitRenderer;
+		SafePtr<SpriteRenderer>		mSpriteRenderer;
+		SafePtr<UnlitModelRenderer>	mUnlitRenderer;
+		SafePtr<ColorModelRenderer> mColorModelRenderer;
+		SafePtr<BillboardRenderer>	mBillboardRenderer;
 
-		SafePtr<Shader>			mSprite2DShader;
-		SafePtr<Shader>			mSprite2DIShader;
-		SafePtr<Shader>			mSprite2DAtlasShader;
-		SafePtr<Shader>			mSprite2DAtlasIShader;
+		SafePtr<Shader>				mSprite2DShader;
+		SafePtr<Shader>				mSprite2DIShader;
+		SafePtr<Shader>				mSprite2DAtlasShader;
+		SafePtr<Shader>				mSprite2DAtlasIShader;
+
+		SafePtr<Shader>				mUnlitMeshShader;
+		SafePtr<Shader>				mColorMeshShader;
+		SafePtr<Shader>				mBillboardShader;
 
 		SafePtr< Texture> _ftex;
 		SafePtr< Sprite> _spriteFont;
 		SpriteFont _ffont;
 		SpriteInstanceData _SimpleTextData;
+
+		SafePtr<Model3D> _model;
+		SafePtr<DrawSurface3D> _3dsurface;
+		SafePtr< Sprite> _sprite3d;
 	};
 }
 #endif

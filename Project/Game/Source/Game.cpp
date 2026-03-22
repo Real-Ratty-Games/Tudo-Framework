@@ -7,6 +7,9 @@
 #include "../Include/GamePipeline.hpp"
 #include <FileSystem.hpp>
 
+#include <Multiply.hpp>
+#include <Transformation.hpp>
+
 using namespace MyGame;
 
 void GameProgram::OnResize(vec2i& size)
@@ -63,6 +66,17 @@ void GameProgram::Tick()
 	while (mClock.Wait())
 	{
 		// Logic here...
+
+		Viewport3D& vp = mPipeline->_vp3d;
+
+		vec3 rotationAxis = vp.Up();
+		quat q = Math::QuatFromAxisAngle(rotationAxis, Math::ToRadians(5.0f));
+		vec3 eyeOffset = vp.Eye - vp.Target;
+		vec3 rotatedOffset = Math::Multiply(eyeOffset, q);
+		vp.Eye = vp.Target + rotatedOffset;
+
+		mPipeline->_vp3d.CreateView();
+
 	}
 }
 

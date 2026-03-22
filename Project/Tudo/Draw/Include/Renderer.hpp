@@ -10,21 +10,15 @@
 namespace Tudo
 {
 	class GraphicsDevice;
-	class DrawSurface;
-	class Shader;
+	class DrawPipeline;
 
 	class Renderer : public DrawObject
 	{
 	public:
-		Renderer(GraphicsDevice* gdevice);
-
-		void SetActiveShader(Shader* shader);
-		void SetActiveSurface(DrawSurface* surface);
-		void ClearActives();
+		Renderer(GraphicsDevice* gdevice, DrawPipeline* pipeline);
 
 	protected:
-		Shader*			pActiveShader;
-		DrawSurface*	pActiveDrawSurface;
+		DrawPipeline* pPipeline;
 	};
 }
 #endif

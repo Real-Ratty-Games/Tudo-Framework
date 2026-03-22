@@ -11,10 +11,17 @@ static float mod = 1;
 GamePipeline::GamePipeline(GraphicsDevice* gdevice, AssetLoader* assetloader, const vec2& resolution) : DrawPipeline(gdevice)
 {
 	// create sprite renderer
-	mSpriteRenderer = new SpriteRenderer(pGDevice);
+	mSpriteRenderer = new SpriteRenderer(pGDevice, this);
 
 	// create unlit renderer
-	mUnlitRenderer = new UnlitRenderer(pGDevice);
+	mUnlitRenderer = new UnlitModelRenderer(pGDevice, this);
+
+	// create color renderer
+	mColorModelRenderer = new ColorModelRenderer(pGDevice, this);
+	mColorModelRenderer->SetColor(0xffffffff);
+
+	// create billboard renderer
+	mBillboardRenderer = new BillboardRenderer(pGDevice, this);
 
 	// create back buffer surface
 	mBackBufferSurface = new DrawSurface2D(pGDevice, 0, resolution, nullptr);
@@ -44,19 +51,46 @@ GamePipeline::GamePipeline(GraphicsDevice* gdevice, AssetLoader* assetloader, co
 
 	Transform2D transf;
 	transf.Location = vec2(100, 100);
-	transf.Scale = vec2(1);
-	transf.Rotation = 0.0f;
-	transf.ImageColor = Color(0xffffffff);
 	mSpriteRenderer->PrepareSpriteFontText(_ffont, transf, _SimpleTextData, "Look at this cool box!\nPretty neat, right?");
 
+
+
+	_model = new Model3D(pGDevice);
+	assetloader->LoadModelFromFile(*_model, "box.m3d");
+
+	_3dsurface = new DrawSurface3D(pGDevice, 1, resolution, nullptr, false);
+	_sprite3d = new Sprite(_3dsurface->GetTexture());
+
+	_vp3d.Eye.Z = -5;
+	_vp3d.CreateView();
 }
 
 void GamePipeline::Draw()
 {
-	mSpriteRenderer->BeginDrawSprite(mBackBufferSurface.Get(), mCamera);
+	PrepareDrawModel(_3dsurface.Get(), _vp3d);
+	SetActiveDrawSurface(_3dsurface.Get());
+
+	SetActiveShader(mColorMeshShader.Get());
+	mColorModelRenderer->DrawModel(*_model);
+
+	SetActiveShader(mBillboardShader.Get());
+	mBillboardRenderer->Draw(_ftex.Get(), vec2(1.0f), 0xffffffff, false);
+
+
+	// need a way to set transform for 3d stuff...
+
+
+
+	SetActiveDrawSurface(mBackBufferSurface.Get());
+	mSpriteRenderer->BeginDrawSprite(mCamera);
 	// Render here...
 
-	mSpriteRenderer->SetActiveShader(mSprite2DAtlasIShader.Get());
+	SetActiveShader(mSprite2DShader.Get());
+
+	Transform2D transf;
+	mSpriteRenderer->DrawSprite(_sprite3d.Get(), transf);
+
+	SetActiveShader(mSprite2DAtlasIShader.Get());
 	mSpriteRenderer->DrawSpriteFontText(_ffont, _SimpleTextData);
 
 	mSpriteRenderer->EndDrawSprite();
@@ -65,6 +99,7 @@ void GamePipeline::Draw()
 void GamePipeline::OnResize(const vec2& size)
 {
 	mBackBufferSurface->OnResize(size);
+	_3dsurface->OnResize(size);
 }
 
 void GamePipeline::LoadShaders(AssetLoader* assetloader)
@@ -92,4 +127,21 @@ void GamePipeline::LoadShaders(AssetLoader* assetloader)
 	assetloader->LoadShader(*mSprite2DAtlasIShader, "Shaders", "Sprite2DAtlasI");
 	mSprite2DAtlasIShader->InitUniform("s_texColor", bgfx::UniformType::Sampler);
 	mSprite2DAtlasIShader->InitUniform("atlasInfo", bgfx::UniformType::Vec4, 2);
+
+	// unlit mesh shader
+	mUnlitMeshShader = new Shader(pGDevice);
+	assetloader->LoadShader(*mUnlitMeshShader, "Shaders", "UnlitMesh");
+	mUnlitMeshShader->InitUniform("s_texColor", bgfx::UniformType::Sampler);
+
+	// color mesh shader
+	mColorMeshShader = new Shader(pGDevice);
+	assetloader->LoadShader(*mColorMeshShader, "Shaders", "ColorMesh");
+	mColorMeshShader->InitUniform("color", bgfx::UniformType::Vec4);
+
+	// billboard shader
+	mBillboardShader = new Shader(pGDevice);
+	assetloader->LoadShader(*mBillboardShader, "Shaders", "Billboard");
+	mBillboardShader->InitUniform("scale", bgfx::UniformType::Vec4);
+	mBillboardShader->InitUniform("color", bgfx::UniformType::Vec4);
+	mBillboardShader->InitUniform("s_texColor", bgfx::UniformType::Sampler);
 }

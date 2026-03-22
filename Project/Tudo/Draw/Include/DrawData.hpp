@@ -64,6 +64,11 @@ namespace Tudo
 			return (r << 28) | (g << 16) | (b << 8) | a;
 		}
 
+		vec4 ToVec() const
+		{
+			return vec4(R, G, B, A);
+		}
+
 		Color operator=(const uint& rgba)
 		{
 			return Color(rgba);
@@ -93,17 +98,10 @@ namespace Tudo
 
 	struct Transform2D
 	{
-		vec2	Location;
-		vec2	Scale;
-		float	Rotation;
-		Color	ImageColor;
-
-		Transform2D()
-		{
-			Location	= vec2(0.0f);
-			Scale		= vec2(1.0f);
-			Rotation	= 0.0f;
-		}
+		vec2	Location	= vec2(0.0f);
+		vec2	Scale		= vec2(1.0f);
+		float	Rotation	= 0.0f;
+		Color	ImageColor	= 0xffffffff;
 	};
 
 	struct TransformAtlas2D : public Transform2D

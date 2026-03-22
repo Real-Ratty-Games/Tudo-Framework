@@ -7,6 +7,7 @@
 #include "SystemTypes.hpp"
 #include "Vector4.hpp"
 #include "Matrix4.hpp"
+#include "Quaternion.hpp"
 
 namespace Tudo::Math
 {
@@ -30,6 +31,17 @@ namespace Tudo::Math
 			left.X * right(0, 2) + left.Y * right(1, 2) + left.Z * right(2, 2) + left.W * right(3, 2),
 			left.X * right(0, 3) + left.Y * right(1, 3) + left.Z * right(2, 3) + left.W * right(3, 3)
 		);
+	}
+
+	template<typename T>
+	Vector3<T> Multiply(const Vector3<T>& left, const Quaternion<T>& right)
+	{
+		Vector3<T> u = Vector3<T>(right.X, right.Y, right.Z);
+		T s = right.W;
+
+		return u * 2 * Vector3<T>::Dot(u, left)
+			+ left * (s * s - Vector3<T>::Dot(u, u))
+			+ Vector3<T>::Cross(u, left) * 2 * s;
 	}
 }
 #endif

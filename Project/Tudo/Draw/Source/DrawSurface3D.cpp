@@ -11,6 +11,9 @@ using namespace Tudo;
 DrawSurface3D::DrawSurface3D(GraphicsDevice* gdevice, uint16 viewid, vec2 size, void* wndHandle, bool depthOnly) : DrawSurface(gdevice, viewid, size, wndHandle)
 {
 	bDepthOnly = depthOnly;
+
+	mFbDepthTex = new Texture(pGDevice);
+
 	if (viewid != 0)
 	{
 		UpdateFB(size);
