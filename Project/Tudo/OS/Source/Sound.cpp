@@ -7,7 +7,7 @@
 
 using namespace Tudo;
 
-void SoundManager::Initialize()
+SoundManager::SoundManager()
 {
 	mCore = new SoundCore();
 	SoundResult err = mCore->init();

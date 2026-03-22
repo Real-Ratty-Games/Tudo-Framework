@@ -8,7 +8,7 @@
 
 using namespace Tudo;
 
-void NetClientTCP::Initialize(uint16 port, strgv ip)
+NetClientTCP::NetClientTCP(uint16 port, strgv ip)
 {
     mSocket = TUDO_NET_SOCKET_INVALID;
 	mSocket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);

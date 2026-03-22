@@ -7,7 +7,7 @@
 
 using namespace Tudo;
 
-void NetClientUDP::Initialize(uint16 port, strgv ip)
+NetClientUDP::NetClientUDP(uint16 port, strgv ip)
 {
     mSocket = TUDO_NET_SOCKET_INVALID;
 	mSocket = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);

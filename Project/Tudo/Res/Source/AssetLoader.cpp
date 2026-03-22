@@ -3,11 +3,13 @@
 	Created by Norbert Gerberg.
 ======================================================*/
 #include "AssetLoader.hpp"
+#include "Memory.hpp"
 #include "FileSystem.hpp"
 #include "Math.hpp"
 #include "BigError.hpp"
-#include "Renderer.hpp"
+#include "GraphicsDevice.hpp"
 #include "Texture.hpp"
+#include "Shader.hpp"
 #include "Model3D.hpp"
 #include <bimg/bimg.h>
 #include <bimg/decode.h>
@@ -26,12 +28,12 @@
 
 using namespace Tudo;
 
-AssetLoader::AssetLoader(Renderer* renderer, strgv rootFolder) : DrawObject(renderer)
+AssetLoader::AssetLoader(GraphicsDevice* gdevice, strgv rootFolder) : DrawObject(gdevice)
 {
 	mRootDir = FileSystem::GetResourcePath(rootFolder).string();
 }
 
-void AssetLoader::LoadTextureFromFile(Texture* texture, strgv filename, uint64 flags, strgv texturename, bool flipUV, bool mipgen)
+void AssetLoader::LoadTextureFromFile(Texture& texture, strgv filename, uint64 flags, strgv texturename, bool flipUV, bool mipgen)
 {
 	const strg realpath = mRootDir + "/" + strg(filename);
 
@@ -48,7 +50,7 @@ void AssetLoader::LoadTextureFromFile(Texture* texture, strgv filename, uint64 f
 	LoadTexture(texture, data, flags, nrComponents, texturename, width, height, mipgen);
 }
 
-void AssetLoader::LoadTextureFromMemory(Texture* texture, std::vector<uint8>& memData, uint64 flags, strgv texturename, bool flipUV, bool mipgen)
+void AssetLoader::LoadTextureFromMemory(Texture& texture, std::vector<uint8>& memData, uint64 flags, strgv texturename, bool flipUV, bool mipgen)
 {
 	stbi_set_flip_vertically_on_load(flipUV);
 	int width, height, nrComponents;
@@ -63,7 +65,7 @@ void AssetLoader::LoadTextureFromMemory(Texture* texture, std::vector<uint8>& me
 	LoadTexture(texture, data, flags, nrComponents, texturename, width, height, mipgen);
 }
 
-void AssetLoader::LoadTextureGPUFromFile(Texture* texture, strgv filename, uint64 flags, strgv texturename)
+void AssetLoader::LoadTextureGPUFromFile(Texture& texture, strgv filename, uint64 flags, strgv texturename)
 {
 	const strg realpath = mRootDir + "/" + strg(filename);
 
@@ -85,12 +87,12 @@ void AssetLoader::LoadTextureGPUFromFile(Texture* texture, strgv filename, uint6
 	LoadGPUTexture(texture, data, flags, texturename);
 }
 
-void AssetLoader::LoadTextureGPUFromMemory(Texture* texture, std::vector<uint8>& memData, uint64 flags, strgv texturename)
+void AssetLoader::LoadTextureGPUFromMemory(Texture& texture, std::vector<uint8>& memData, uint64 flags, strgv texturename)
 {
 	LoadGPUTexture(texture, memData, flags, texturename);
 }
 
-void AssetLoader::LoadModelFromFile(Model3D* model, strgv filename)
+void AssetLoader::LoadModelFromFile(Model3D& model, strgv filename)
 {
 	const strg realpath = mRootDir + "/" + strg(filename);
 
@@ -118,7 +120,7 @@ void AssetLoader::LoadModelFromFile(Model3D* model, strgv filename)
 		throw BigError(errmsg);
 	}
 
-	model->mMeshes.resize(header.Amount);
+	model.mMeshes.resize(header.Amount);
 
 	for (uint64 i = 0; i < header.Amount; i++)
 	{
@@ -138,11 +140,11 @@ void AssetLoader::LoadModelFromFile(Model3D* model, strgv filename)
 		file.read(reinterpret_cast<char*>(mdata.Vertices.data()), vsize * sizeof(MeshVertex));
 		file.read(reinterpret_cast<char*>(mdata.Indices.data()), isize * sizeof(uint16));
 
-		CreateMesh(model->mMeshes[i], mdata);
+		CreateMesh(model.mMeshes[i], mdata);
 	}
 }
 
-void AssetLoader::LoadModelFromMemory(Model3D* model, std::vector<uint8>& data)
+void AssetLoader::LoadModelFromMemory(Model3D& model, std::vector<uint8>& data)
 {
 	if (data.empty())
 		throw BigError("Data is empty!");
@@ -160,7 +162,7 @@ void AssetLoader::LoadModelFromMemory(Model3D* model, std::vector<uint8>& data)
 	if (header.Version != M3DC_VERSION)
 		throw BigError("Model file format uses older version");
 
-	model->mMeshes.resize(header.Amount);
+	model.mMeshes.resize(header.Amount);
 
 	for (uint64 i = 0; i < header.Amount; i++)
 	{
@@ -189,7 +191,7 @@ void AssetLoader::LoadModelFromMemory(Model3D* model, std::vector<uint8>& data)
 		Memory::Copy(mdata.Indices.data(), rdat + offset, itsize);
 		offset += itsize;
 
-		CreateMesh(model->mMeshes[i], mdata);
+		CreateMesh(model.mMeshes[i], mdata);
 	}
 }
 
@@ -219,7 +221,7 @@ void AssetLoader::LoadSoundFromMemory(SoundWav& obj, std::vector<uint8>& data)
 		throw BigError("Failed loading sound file from memory!");
 }
 
-void AssetLoader::LoadShader(Shader* shader, strgv rootFolder, strgv shadername)
+void AssetLoader::LoadShader(Shader& shader, strgv rootFolder, strgv shadername)
 {
 	const strg realpath = mRootDir + "/" + strg(rootFolder);
 
@@ -256,22 +258,22 @@ void AssetLoader::LoadShader(Shader* shader, strgv rootFolder, strgv shadername)
 	bgfx::ShaderHandle fsh = bgfx::createShader(ShaderGetMemory(ffile));
 	bgfx::setName(vsh, strg(strg(shadername) + "_fs").c_str());
 
-	shader->mHandle = bgfx::createProgram(vsh, fsh, true);
+	shader.mHandle = bgfx::createProgram(vsh, fsh, true);
 }
 
-void AssetLoader::LoadHardwareCursorImage(WindowCursor* cursor, strgv filename)
+void AssetLoader::LoadHardwareCursorImage(WindowCursor& cursor, strgv filename)
 {
 	const strg realpath = mRootDir + "/" + strg(filename);
 	SDL_Surface* cursorSurface = SDL_LoadBMP(realpath.data());
 	if (cursorSurface != nullptr)
 	{
-		cursor->mCursor = SDL_CreateColorCursor(cursorSurface, 0, 0);
+		cursor.mCursor = SDL_CreateColorCursor(cursorSurface, 0, 0);
 		SDL_DestroySurface(cursorSurface);
 	}
 	else throw BigError("Image file not found: " + strg(filename));
 }
 
-void AssetLoader::LoadTexture(Texture* texture, uint8* data, uint64 flags, int nrComponents,
+void AssetLoader::LoadTexture(Texture& texture, uint8* data, uint64 flags, int nrComponents,
 	strgv texturename, int width, int height, bool mipgen)
 {
 	bgfx::TextureFormat::Enum format = bgfx::TextureFormat::R8;
@@ -285,7 +287,7 @@ void AssetLoader::LoadTexture(Texture* texture, uint8* data, uint64 flags, int n
 		int nmips = Math::Maxi(width, height);
 		nmips = 1 + static_cast<int>(std::floor(std::log2(nmips)));
 
-		texture->mHandle = bgfx::createTexture2D(
+		texture.mHandle = bgfx::createTexture2D(
 			static_cast<uint16>(width),
 			static_cast<uint16>(height),
 			true,
@@ -301,7 +303,7 @@ void AssetLoader::LoadTexture(Texture* texture, uint8* data, uint64 flags, int n
 		for (int i = 0; i < nmips; i++)
 		{
 			bgfx::updateTexture2D(
-				texture->mHandle,
+				texture.mHandle,
 				0,
 				i,
 				0, 0,
@@ -324,7 +326,7 @@ void AssetLoader::LoadTexture(Texture* texture, uint8* data, uint64 flags, int n
 	}
 	else
 	{
-		texture->mHandle = bgfx::createTexture2D(
+		texture.mHandle = bgfx::createTexture2D(
 			static_cast<uint16>(width),
 			static_cast<uint16>(height),
 			false,
@@ -334,21 +336,21 @@ void AssetLoader::LoadTexture(Texture* texture, uint8* data, uint64 flags, int n
 			bgfx::copy(data, width * height * nrComponents));
 	}
 
-	if (bgfx::isValid(texture->mHandle))
-		bgfx::setName(texture->mHandle, texturename.data());
+	if (bgfx::isValid(texture.mHandle))
+		bgfx::setName(texture.mHandle, texturename.data());
 	else
 	{
 		const strg errmsg = "Failed loading texture: " + strg(texturename);
 		throw BigError(errmsg);
 	}
 
-	texture->mSize = vec2i(width, height);
+	texture.mSize = vec2i(width, height);
 
 	stbi_image_free(data);
 	stbi_set_flip_vertically_on_load(false);
 }
 
-void AssetLoader::LoadGPUTexture(Texture* texture, std::vector<uint8>& data, uint64 flags, strgv texturename)
+void AssetLoader::LoadGPUTexture(Texture& texture, std::vector<uint8>& data, uint64 flags, strgv texturename)
 {
 	bx::DefaultAllocator allc;
 #if __APPLE__
@@ -362,7 +364,7 @@ void AssetLoader::LoadGPUTexture(Texture* texture, std::vector<uint8>& data, uin
 		throw BigError(errmsg);
 	}
 
-	texture->mHandle = bgfx::createTexture2D(
+	texture.mHandle = bgfx::createTexture2D(
 		static_cast<uint16>(ic->m_width),
 		static_cast<uint16>(ic->m_height),
 		(ic->m_numMips > 0),
@@ -371,25 +373,25 @@ void AssetLoader::LoadGPUTexture(Texture* texture, std::vector<uint8>& data, uin
 		flags,
 		bgfx::copy(ic->m_data, ic->m_size));
 
-	if (bgfx::isValid(texture->mHandle))
-		bgfx::setName(texture->mHandle, texturename.data());
+	if (bgfx::isValid(texture.mHandle))
+		bgfx::setName(texture.mHandle, texturename.data());
 	else
 	{
 		const strg errmsg = "Failed loading GPU texture: " + strg(texturename);
 		throw BigError(errmsg);
 	}
 
-	texture->mSize = vec2i(ic->m_width, ic->m_height);
+	texture.mSize = vec2i(ic->m_width, ic->m_height);
 	bimg::imageFree(ic);
 }
 
 void AssetLoader::CreateMesh(Mesh3D& modelMesh, MeshData& mdata)
 {
-	modelMesh.VBH = pRenderer->CreateVertexBuffer(mdata.Vertices.data(), mdata.VSize * sizeof(MeshVertex), pRenderer->mMesh3DVBLayout);
+	modelMesh.VBH = pGDevice->CreateVertexBuffer(mdata.Vertices.data(), mdata.VSize * sizeof(MeshVertex), pGDevice->mMesh3DVBLayout);
 	if (!bgfx::isValid(modelMesh.VBH))
 		throw BigError("Vertex Buffer is invalid!");
 
-	modelMesh.IBH = pRenderer->CreateIndexBuffer(mdata.Indices.data(), mdata.ISize * sizeof(uint16));
+	modelMesh.IBH = pGDevice->CreateIndexBuffer(mdata.Indices.data(), mdata.ISize * sizeof(uint16));
 	if (!bgfx::isValid(modelMesh.IBH))
 		throw BigError("Index Buffer is invalid!");
 }

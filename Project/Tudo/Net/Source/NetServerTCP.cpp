@@ -10,7 +10,7 @@
 
 using namespace Tudo;
 
-void NetServerTCP::Initialize(uint16 port, strgv ip)
+NetServerTCP::NetServerTCP(uint16 port, strgv ip)
 {
     mSocket = TUDO_NET_SOCKET_INVALID;
 	mSocket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
@@ -20,7 +20,7 @@ void NetServerTCP::Initialize(uint16 port, strgv ip)
 		throw BigError("Failed to listen server: " + std::to_string(Network::GetError()));
 }
 
-void NetServerTCP::Release()
+NetServerTCP::~NetServerTCP()
 {
 	for (auto& client : mClients)
 		Disconnect(client);

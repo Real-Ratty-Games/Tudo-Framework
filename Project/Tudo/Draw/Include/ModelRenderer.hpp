@@ -2,27 +2,24 @@
 	Copyright (c) 2026 Real Ratty Games.
 	Created by Norbert Gerberg.
 ======================================================*/
-#ifndef MODEL3D_HPP_
-#define MODEL3D_HPP_
+#ifndef MODELRENDERER_HPP_
+#define MODELRENDERER_HPP_
 #include "SystemTypes.hpp"
 #include "DrawData.hpp"
-#include "DrawObject.hpp"
+#include "Renderer.hpp"
 
 namespace Tudo
 {
 	class GraphicsDevice;
+	class Model3D;
 
-	class Model3D : public DrawObject
+	class ModelRenderer : public Renderer
 	{
 	public:
-		Model3D(GraphicsDevice* gdevice);
-		~Model3D();
-		const std::vector<Mesh3D>& Meshes() const;
+		ModelRenderer(GraphicsDevice* gdevice);
 
-		friend class AssetLoader;
-
-	private:
-		std::vector<Mesh3D>	mMeshes;
+		void			DrawModel(const Model3D& model);
+		virtual void	DrawMesh(const Mesh3D& mesh) = 0;
 	};
 }
 #endif

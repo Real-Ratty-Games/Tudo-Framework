@@ -12,12 +12,7 @@ namespace Tudo
 	class NetNode
 	{
 	public:
-		~NetNode();
-		virtual void Initialize(uint16 port, strgv ip) = 0;
-		virtual int	 Run() = 0;
-
-	protected:
-		virtual void Release() = 0;
+		virtual int Run() = 0;
 
 	protected:
         NetSocket   mSocket;

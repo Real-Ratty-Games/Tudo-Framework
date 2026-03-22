@@ -8,14 +8,14 @@
 
 using namespace Tudo;
 
-void NetServerUDP::Initialize(uint16 port, strgv ip)
+NetServerUDP::NetServerUDP(uint16 port, strgv ip)
 {
     mSocket = TUDO_NET_SOCKET_INVALID;
 	mSocket = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
 	NetServer::Initialize(port, ip);
 }
 
-void NetServerUDP::Release()
+NetServerUDP::~NetServerUDP()
 {
     Network::CloseSocket(mSocket);
 }

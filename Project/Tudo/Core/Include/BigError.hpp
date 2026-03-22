@@ -9,6 +9,7 @@
 
 namespace Tudo
 {
+	/// Engine related issue
 	class BigError : public std::runtime_error
 	{
 	public:

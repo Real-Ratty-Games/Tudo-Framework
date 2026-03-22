@@ -8,16 +8,16 @@
 #include "Memory.hpp"
 #include "DrawData.hpp"
 #include "DrawSurface.hpp"
-#include "Texture.hpp"
 
 namespace Tudo
 {
-	class Renderer;
+	class GraphicsDevice;
+	class Texture;
 
 	class DrawSurface3D : public DrawSurface
 	{
 	public:
-		DrawSurface3D(Renderer* renderer, uint16 viewid, vec2 size, void* wndHandle, bool depthOnly);
+		DrawSurface3D(GraphicsDevice* gdevice, uint16 viewid, vec2 size, void* wndHandle, bool depthOnly);
 		Texture* GetDepthTexture();
 
 	protected:

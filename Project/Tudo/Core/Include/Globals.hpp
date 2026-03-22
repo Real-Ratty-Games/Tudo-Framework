@@ -19,6 +19,10 @@ namespace Tudo
 		uint64 Amount;
 	};
 
+	/// When changing this, don't forget to change
+	/// the vertex layout TUDO_RENDERER_M3D_VERTEXLAYOUT
+	/// in GraphicsDevice.cpp.
+	/// Also adapt in M3DC!
 	struct MeshVertex
 	{
 		// Position
@@ -44,7 +48,7 @@ namespace Tudo
 		float BX;
 		float BY;
 		float BZ;
-	}; // TUDO_RENDERER_M3D_VERTEXLAYOUT
+	};
 
 	struct MeshData
 	{

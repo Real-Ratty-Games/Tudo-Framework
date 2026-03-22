@@ -7,16 +7,16 @@
 
 namespace Tudo
 {
-	class Renderer;
+	class GraphicsDevice;
 
 	class DrawObject
 	{
 	public:
-		DrawObject(Renderer* renderer);
-		Renderer* GetRenderer();
+		DrawObject(GraphicsDevice* gdevice);
+		GraphicsDevice* GetRenderer();
 
 	protected:
-		Renderer* pRenderer;
+		GraphicsDevice* pGDevice;
 	};
 }
 #endif

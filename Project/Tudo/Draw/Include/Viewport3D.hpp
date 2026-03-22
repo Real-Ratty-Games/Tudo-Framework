@@ -8,8 +8,9 @@
 
 namespace Tudo
 {
-	/// Z is forward
-	/// Y is up
+	/// +X is right
+	/// +Y is up
+	/// +Z is forward
 	class Viewport3D
 	{
 	public:

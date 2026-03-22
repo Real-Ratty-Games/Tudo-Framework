@@ -8,9 +8,6 @@
 
 namespace Tudo
 {
-	/// <summary>
-	/// Template for main program logic
-	/// </summary>
 	class Program
 	{
 	public:

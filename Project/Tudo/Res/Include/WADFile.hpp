@@ -10,9 +10,7 @@
 
 namespace Tudo
 {
-	/// <summary>
 	/// Data types for wad file entry
-	/// </summary>
 	enum class EWADFileDataType : uint8
 	{
 		RAW		= 0,
@@ -21,9 +19,7 @@ namespace Tudo
 		MODEL	= 3
 	};
 
-	/// <summary>
 	/// WAD file entry
-	/// </summary>
 	struct WADItem
 	{
 		uint				Size;
@@ -45,9 +41,7 @@ namespace Tudo
 		}
 	};
 
-	/// <summary>
 	/// Read data from a wad file
-	/// </summary>
 	class WADFile
 	{
 	public:

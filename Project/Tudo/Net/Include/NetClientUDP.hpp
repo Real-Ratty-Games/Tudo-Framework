@@ -13,8 +13,8 @@ namespace Tudo
 	class NetClientUDP : public NetClient
 	{
 	public:
-		void Initialize(uint16 port, strgv ip);
-		int	 Run();
+		NetClientUDP(uint16 port, strgv ip);
+		int Run();
 
 	protected:
 		int Recv(char* buffer, int size, int flags = 0);

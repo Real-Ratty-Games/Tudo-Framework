@@ -10,9 +10,6 @@
 
 namespace Tudo
 {
-	/// <summary>
-	/// Reading and writing a ini file
-	/// </summary>
 	class IniFile
 	{
 	public:

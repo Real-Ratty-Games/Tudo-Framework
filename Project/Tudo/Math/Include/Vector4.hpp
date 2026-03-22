@@ -8,10 +8,7 @@
 
 namespace Tudo
 {
-	/// <summary>
 	/// Vector 4D
-	/// </summary>
-	/// <typeparam name="T"></typeparam>
 	template<typename T>
 	class Vector4
 	{
@@ -47,7 +44,9 @@ namespace Tudo
         template<typename U>
         Vector4(const Vector4<U>& other)
             : X(static_cast<T>(other.X)),
-            Y(static_cast<T>(other.Y))
+            Y(static_cast<T>(other.Y)),
+            Z(static_cast<T>(other.Z)),
+            W(static_cast<T>(other.W))
         { }
 
         inline T* Ptr()

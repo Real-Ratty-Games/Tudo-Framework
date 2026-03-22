@@ -4,9 +4,6 @@
 ======================================================*/
 #include "../Include/Game.hpp"
 #include <DebugHelp.hpp>
-#include <Renderer.hpp>
-#include <Network.hpp>
-#include <Window.hpp>
 
 using namespace MyGame;
 

@@ -8,9 +8,7 @@
 
 namespace Tudo
 {
-    /// <summary>
     /// List of keyboard keys
-    /// </summary>
     enum class KeyboardKey : int
     {
         A = 4,
@@ -261,9 +259,7 @@ namespace Tudo
         ENDCALL = 290
     };
 
-    /// <summary>
     /// List of mouse buttons
-    /// </summary>
     enum class MouseButton : int
     {
         LEFT = 1,
@@ -273,9 +269,7 @@ namespace Tudo
         X2 = 5
     };
 
-    /// <summary>
     /// List of gamepad buttons
-    /// </summary>
     enum class GamepadButton : int
     {
         SOUTH = 0,
@@ -306,9 +300,7 @@ namespace Tudo
         MISC6
     };
 
-    /// <summary>
     /// List of gamepad axis buttons
-    /// </summary>
     enum class GamepadAxis : int
     {
         LEFTX = 0,

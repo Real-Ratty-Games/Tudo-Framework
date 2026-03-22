@@ -6,7 +6,7 @@
 #include "Renderer.hpp"
 #include "Transformation.hpp"
 #include "Multiply.hpp"
-#include <bx/math.h>
+#include "Projection.hpp"
 
 using namespace Tudo;
 
@@ -123,13 +123,11 @@ inline void DrawMath_ScreenLoc2WorldLoc(const vec2& screenLocation, const vec2& 
 	const float glCoordY = -((2.0f * screenLocation.Y) / screenSize.Y - 1.0f);
 	vec4 clipCoords = vec4(glCoordX, glCoordY, 1.0f, 1.0f);
 
-	float proj[16];
-	bx::mtxProj(proj, viewport3D.Fov, screenSize.X / screenSize.Y, viewport3D.Near, viewport3D.Far, bgfx::getCaps()->homogeneousDepth);
+	mat4 proj = Math::ProjectPerspLH(viewport3D.Fov, screenSize.X / screenSize.Y, viewport3D.Near, viewport3D.Far);
 
-	mat4 projMat(proj);
 	mat4 invertedProjection;
-	if (!projMat.Inverse(invertedProjection))
-		invertedProjection = projMat;
+	if (!proj.Inverse(invertedProjection))
+		invertedProjection = proj;
 
 	vec4 eyeCoord = Math::Multiply(clipCoords, invertedProjection);
 	eyeCoord = eyeCoord / eyeCoord.W;

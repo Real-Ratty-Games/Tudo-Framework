@@ -14,9 +14,7 @@
 
 namespace Tudo
 {
-	/// <summary>
 	/// Alarm module properties
-	/// </summary>
 	struct AlarmModule
 	{
 		std::function<int64()>	Method;
@@ -24,9 +22,7 @@ namespace Tudo
 		bool					bPaused = false;
 	};
 
-	/// <summary>
 	/// Alarm system for timed logic
-	/// </summary>
 	class Alarm
 	{
 	public:

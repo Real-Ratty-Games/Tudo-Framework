@@ -2,29 +2,27 @@
 	Copyright (c) 2026 Real Ratty Games.
 	Created by Norbert Gerberg.
 ======================================================*/
-#ifndef SPRITE_HPP_
-#define SPRITE_HPP_
+#ifndef UNLITRENDERER_HPP_
+#define UNLITRENDERER_HPP_
 #include "SystemTypes.hpp"
 #include "DrawData.hpp"
+#include "ModelRenderer.hpp"
 
 namespace Tudo
 {
+	class GraphicsDevice;
 	class Texture;
+	class Mesh3D;
 
-	/// 2D Quad Sprite
-	class Sprite
+	class UnlitRenderer : public ModelRenderer
 	{
 	public:
-		Sprite(Texture* texture);
+		UnlitRenderer(GraphicsDevice* gdevice);
+		void DrawMesh(const Mesh3D& mesh);
 		void SetTexture(Texture* texture);
-		Texture* GetTexture();
-
-	public:
-		vec2		RotationPivot;
-		vec2		Size;
 
 	private:
-		Texture*	pTexture;
+		Texture* pTexture;
 	};
 }
 #endif

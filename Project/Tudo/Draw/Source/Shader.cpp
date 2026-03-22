@@ -9,12 +9,10 @@
 #include <vector>
 #include <sstream>
 #include <filesystem>
-#include <bx/bx.h>
-#include <bx/file.h>
 
 using namespace Tudo;
 
-Shader::Shader(Renderer* renderer) : DrawObject(renderer)
+Shader::Shader(GraphicsDevice* gdevice) : DrawObject(gdevice)
 {
 	mHandle = BGFX_INVALID_HANDLE;
 }

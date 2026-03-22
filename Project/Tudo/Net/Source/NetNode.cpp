@@ -4,9 +4,3 @@
 ======================================================*/
 #include "NetNode.hpp"
 
-using namespace Tudo;
-
-NetNode::~NetNode()
-{
-	Release();
-}

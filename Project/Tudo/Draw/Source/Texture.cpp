@@ -3,11 +3,11 @@
 	Created by Norbert Gerberg.
 ======================================================*/
 #include "Texture.hpp"
-#include "Renderer.hpp"
+#include "GraphicsDevice.hpp"
 
 using namespace Tudo;
 
-Texture::Texture(Renderer* renderer) : DrawObject(renderer)
+Texture::Texture(GraphicsDevice* gdevice) : DrawObject(gdevice)
 {
 	mHandle = BGFX_INVALID_HANDLE;
 }

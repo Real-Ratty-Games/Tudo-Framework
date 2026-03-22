@@ -8,10 +8,7 @@
 
 namespace Tudo
 {
-	/// <summary>
 	/// Vector 2D
-	/// </summary>
-	/// <typeparam name="T"></typeparam>
 	template<typename T>
 	class Vector2
 	{

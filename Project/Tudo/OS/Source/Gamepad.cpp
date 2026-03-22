@@ -8,8 +8,6 @@
 
 using namespace Tudo;
 
-static bool Gamepad_CheckButton(SDL_Gamepad* handle, GamepadButton button);
-
 void Gamepad::LoadConfig()
 {
 	if (SDL_AddGamepadMappingsFromFile("Data/Gamepads.ini") == -1)
@@ -57,7 +55,7 @@ bool Gamepad::IsConnected()
 
 bool Gamepad::ButtonDown(GamepadButton button)
 {
-	return Gamepad_CheckButton(mGamepadHandle, button);
+	return CheckButton(mGamepadHandle, button);
 }
 
 bool Gamepad::ButtonUp(GamepadButton button)
@@ -67,7 +65,7 @@ bool Gamepad::ButtonUp(GamepadButton button)
 
 bool Gamepad::ButtonPressed(GamepadButton button)
 {
-	const bool down = Gamepad_CheckButton(mGamepadHandle, button);
+	const bool down = CheckButton(mGamepadHandle, button);
 	auto it = std::find(mPressed.begin(), mPressed.end(), button);
 	const bool pressed = (it != mPressed.end());
 
@@ -95,16 +93,8 @@ int16 Gamepad::Axis(GamepadAxis axis)
 	return SDL_GetGamepadAxis(mGamepadHandle, (SDL_GamepadAxis)axis);
 }
 
-/*======================================================
-======================================================*/
-
-/// <summary>
 /// Returns true if gamepad button is held down
-/// </summary>
-/// <param name="handle"></param>
-/// <param name="button"></param>
-/// <returns></returns>
-bool Gamepad_CheckButton(SDL_Gamepad* handle, GamepadButton button)
+bool Gamepad::CheckButton(SDL_Gamepad* handle, GamepadButton button)
 {
 	return SDL_GetGamepadButton(handle, (SDL_GamepadButton)button);
 }
