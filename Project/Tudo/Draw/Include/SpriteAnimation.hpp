@@ -9,9 +9,7 @@
 
 namespace Tudo
 {
-	/// <summary>
 	/// Sprite Animation types
-	/// </summary>
 	enum class ESpriteAnimationStyle
 	{
 		NONE,			// 0 -> 1 -> 2 -> x
@@ -20,9 +18,7 @@ namespace Tudo
 		REVERSELOOP		// 0 -> 1 -> 2 -> 1 -> 0 -> 1 -> ..
 	};
 
-	/// <summary>
 	/// Sprite animation properties
-	/// </summary>
 	struct SpriteAnimation
 	{
 		vec2					FrameSize;
@@ -33,9 +29,7 @@ namespace Tudo
 		ESpriteAnimationStyle	Style = ESpriteAnimationStyle::NONE;
 	};
 
-	/// <summary>
 	/// Manages sprite animation
-	/// </summary>
 	class SpriteAnimator
 	{
 	public:
@@ -45,16 +39,13 @@ namespace Tudo
 		void Stop();
 		void Pause(bool paused);
 
-		/// <summary>
 		/// Returns true if animation has finished
 		/// Does not check while looping
-		/// </summary>
-		/// <returns></returns>
 		bool IsFinished();
 		void Tick();
 
-		SpriteAnimation*	GetAnimation();
-		vec2				GetCurrentIndex();
+		SpriteAnimation*	GetAnimation() const;
+		vec2				GetCurrentIndex() const;
 
 	private:
 		int64 AdvanceFrame();

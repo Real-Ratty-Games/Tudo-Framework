@@ -27,13 +27,10 @@ namespace Tudo
 		SoLoud::WavStream Handle;
 	};
 
-	/// <summary>
-	/// Manages audio
-	/// </summary>
 	class SoundManager
 	{
 	public:
-		void Initialize();
+		SoundManager();
 		~SoundManager();
 
 		SoundCore* Core();

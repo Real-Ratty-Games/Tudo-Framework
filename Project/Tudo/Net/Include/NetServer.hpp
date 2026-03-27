@@ -11,7 +11,7 @@ namespace Tudo
 {
 	class NetServer : public NetNode
 	{
-	public:
+	protected:
 		void Initialize(uint16 port, strgv ip);
 	};
 }

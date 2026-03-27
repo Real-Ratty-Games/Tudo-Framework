@@ -33,8 +33,8 @@ namespace Tudo::Math
 	Matrix4<T> Rotate(const Matrix4<T>& mat, const Vector3<T>& axis, T angle, bool local)
 	{
 		const Vector3<T> u = axis.Normalized();
-		const T c = cos(angle);
-		const T s = sin(angle);
+		const T c = std::cos(angle);
+		const T s = std::sin(angle);
 		const T t = 1 - c;
 
 		Matrix4<T> result = Matrix4<T>::Identity();
@@ -100,60 +100,5 @@ namespace Tudo::Math
 	quat QuatFromAxisAngle(const vec3& axis, float angle);
 	quat QuatFromEulerAngles(const EulerRotation& rot);
 	quat QuatAddEulerRotation(const quat& q, const EulerRotation& rot, bool local);
-
-	template<typename T>
-	Matrix4<T> LookAtLH(const Vector3<T>& eye, const Vector3<T>& target, const Vector3<T>& sup,
-		Vector3<T>& forward, Vector3<T>& right, Vector3<T>& up)
-	{
-		// forward
-		Vector3<T> zaxis = target - eye;
-		zaxis = zaxis.Normalized();
-
-		// right
-		Vector3<T> xaxis = Vector3<T>::Cross(sup, zaxis);
-		xaxis = xaxis.Normalized();
-
-		// up
-		Vector3<T> yaxis = Vector3<T>::Cross(zaxis, xaxis);
-
-		forward = zaxis;
-		right = xaxis;
-		up = yaxis;
-
-		return mat4(
-			xaxis.X, yaxis.X, zaxis.X, T(0),
-			xaxis.Y, yaxis.Y, zaxis.Y, T(0),
-			xaxis.Z, yaxis.Z, zaxis.Z, T(0),
-			-Vector3<T>::Dot(xaxis, eye),
-			-Vector3<T>::Dot(yaxis, eye),
-			-Vector3<T>::Dot(zaxis, eye),
-			T(1)
-		);
-	}
-
-	template<typename T>
-	Matrix4<T> LookAtLH(const Vector3<T>& eye, const Vector3<T>& target, const Vector3<T>& sup)
-	{
-		// forward
-		Vector3<T> zaxis = target - eye;
-		zaxis = zaxis.Normalized();
-
-		// right
-		Vector3<T> xaxis = Vector3<T>::Cross(sup, zaxis);
-		xaxis = xaxis.Normalized();
-
-		// up
-		Vector3<T> yaxis = Vector3<T>::Cross(zaxis, xaxis);
-
-		return mat4(
-			xaxis.X, xaxis.Y, xaxis.Z, T(0),
-			yaxis.X, yaxis.Y, yaxis.Z, T(0),
-			zaxis.X, zaxis.Y, zaxis.Z, T(0),
-			-Vector3<T>::Dot(xaxis, eye),
-			-Vector3<T>::Dot(yaxis, eye),
-			-Vector3<T>::Dot(zaxis, eye),
-			T(1)
-		);
-	}
 }
 #endif

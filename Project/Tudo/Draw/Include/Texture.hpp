@@ -10,12 +10,12 @@
 
 namespace Tudo
 {
-	class Renderer;
+	class GraphicsDevice;
 
 	class Texture : public DrawObject
 	{
 	public:
-		Texture(Renderer* renderer);
+		Texture(GraphicsDevice& gdevice);
 		~Texture();
 
 		bgfx::TextureHandle&	Handle();

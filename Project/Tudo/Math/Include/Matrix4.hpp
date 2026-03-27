@@ -8,11 +8,8 @@
 
 namespace Tudo
 {
-	/// <summary>
 	/// Matrix 4x4
 	/// row-major style
-	/// </summary>
-	/// <typeparam name="T"></typeparam>
 	template<typename T>
 	class Matrix4
 	{
@@ -186,7 +183,7 @@ namespace Tudo
 			if (std::abs(det) < T(1e-6))
 				return false;
 
-			det = T(1) / det;
+			det = 1 / det;
 
 			for (int i = 0; i < 16; i++)
 				outMat.Data[i] = inv[i] * det;

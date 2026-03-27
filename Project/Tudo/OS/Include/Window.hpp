@@ -11,9 +11,6 @@ namespace Tudo
 {
 	class WindowCursor;
 
-	/// <summary>
-	/// Managing window creation and cleanup
-	/// </summary>
 	class Window
 	{
 	public:
@@ -42,10 +39,7 @@ namespace Tudo
 		vec2i GetSize();
 		bool GetFullscreen();
 
-		/// <summary>
 		/// Returns native OS window handle
-		/// </summary>
-		/// <returns></returns>
 		void* GetNativePtr();
 
 	protected:

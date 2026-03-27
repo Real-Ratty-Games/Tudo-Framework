@@ -12,10 +12,10 @@ namespace Tudo
 	class NetClient : public NetNode
 	{
 	public:
-		void Initialize(uint16 port, strgv ip);
+		~NetClient();
 
 	protected:
-		void Release();
+		void Initialize(uint16 port, strgv ip);
 
 		virtual int Recv(char* buffer, int size, int flags = 0) = 0;
 		virtual int Send(const char* buffer, int size, int flags = 0) = 0;

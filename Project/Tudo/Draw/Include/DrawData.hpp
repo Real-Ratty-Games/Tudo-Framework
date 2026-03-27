@@ -27,6 +27,7 @@ namespace Tudo
         METAL       = bgfx::RendererType::Metal
 	};
 
+	/// range: [0, 1]
 	struct Color
 	{
 		float R;
@@ -34,22 +35,43 @@ namespace Tudo
 		float B;
 		float A;
 
-		Color()
+		Color() : R(0), G(0), B(0), A(0) {}
+
+		Color(float r, float g, float b, float a) : R(r), G(g), B(b), A(a) {}
+
+		Color(const Color& other)
 		{
-			R = G = B = A = 1.0f;
+			R = other.R;
+			G = other.G;
+			B = other.B;
+			A = other.A;
 		}
 
-		Color(float vl)
+		Color(uint rgba)
 		{
-			R = G = B = A = vl;
+			R = ((rgba >> 16) & 0xff)	/ 255.0f;
+			G = ((rgba >> 8) & 0xff)	/ 255.0f;
+			B = (rgba & 0xff)			/ 255.0f;
+			A = ((rgba >> 24) & 0xff)	/ 255.0f;
 		}
 
-		Color(float r, float g, float b, float a)
+		uint ToInt() const
 		{
-			R = r;
-			G = g;
-			B = b;
-			A = a;
+			uint r = (uint)(R * 255);
+			uint g = (uint)(G * 255);
+			uint b = (uint)(B * 255);
+			uint a = (uint)(A * 255);
+			return (r << 28) | (g << 16) | (b << 8) | a;
+		}
+
+		vec4 ToVec() const
+		{
+			return vec4(R, G, B, A);
+		}
+
+		Color operator=(const uint& rgba)
+		{
+			return Color(rgba);
 		}
 	};
 
@@ -76,17 +98,10 @@ namespace Tudo
 
 	struct Transform2D
 	{
-		vec2	Location;
-		vec2	Scale;
-		float	Rotation;
-		Color	ImageColor;
-
-		Transform2D()
-		{
-			Location	= vec2(0.0f);
-			Scale		= vec2(1.0f);
-			Rotation	= 0.0f;
-		}
+		vec2	Location	= vec2(0.0f);
+		vec2	Scale		= vec2(1.0f);
+		float	Rotation	= 0.0f;
+		Color	ImageColor	= 0xffffffff;
 	};
 
 	struct TransformAtlas2D : public Transform2D

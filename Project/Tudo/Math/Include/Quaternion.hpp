@@ -51,7 +51,7 @@ namespace Tudo
 		{
 			const T len = Length();
 
-			if (len == T(0))
+			if (len == 0)
 				return Quaternion<T>();
 
 			return Quaternion<T>(

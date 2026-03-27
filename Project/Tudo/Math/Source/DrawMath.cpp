@@ -6,15 +6,15 @@
 #include "Renderer.hpp"
 #include "Transformation.hpp"
 #include "Multiply.hpp"
-#include <bx/math.h>
+#include "Projection.hpp"
 
 using namespace Tudo;
 
-static inline void DrawMath_ScreenLoc2WorldLoc(const vec2& screenLocation, const vec2& screenSize, const Viewport3D& viewport3D,
+static inline void DrawMath_ScreenLoc2WorldLoc(vec2 screenLocation, vec2 screenSize, const Viewport3D& viewport3D,
 	vec3& screenRay, vec4& rayWorld);
 
-vec3 Math::ScreenLocation2WorldLocation(const vec2& screenLocation, const vec2& screenSize,
-	const Viewport3D& viewport3D, const float& distance)
+vec3 Math::ScreenLocation2WorldLocation(vec2 screenLocation, vec2 screenSize,
+	const Viewport3D& viewport3D, float distance)
 {
 	vec3 screenRay;
 	vec4 rayWorld;
@@ -22,8 +22,8 @@ vec3 Math::ScreenLocation2WorldLocation(const vec2& screenLocation, const vec2& 
 	return viewport3D.Eye + screenRay * distance;
 }
 
-vec3 Math::ScreenLocation2WorldLocationPY(const vec2& screenLocation, const vec2& screenSize,
-	const Viewport3D& viewport3D, const float& yplane)
+vec3 Math::ScreenLocation2WorldLocationPY(vec2 screenLocation, vec2 screenSize,
+	const Viewport3D& viewport3D, float yplane)
 {
 	vec3 screenRay;
 	vec4 rayWorld;
@@ -35,8 +35,8 @@ vec3 Math::ScreenLocation2WorldLocationPY(const vec2& screenLocation, const vec2
 	return worldPos;
 }
 
-vec3 Math::ScreenLocation2WorldLocationPX(const vec2& screenLocation, const vec2& screenSize,
-	const Viewport3D& viewport3D, const float& xplane)
+vec3 Math::ScreenLocation2WorldLocationPX(vec2 screenLocation, vec2 screenSize,
+	const Viewport3D& viewport3D, float xplane)
 {
 	vec3 screenRay;
 	vec4 rayWorld;
@@ -48,8 +48,8 @@ vec3 Math::ScreenLocation2WorldLocationPX(const vec2& screenLocation, const vec2
 	return worldPos;
 }
 
-vec3 Math::ScreenLocation2WorldLocationPZ(const vec2& screenLocation, const vec2& screenSize,
-	const Viewport3D& viewport3D, const float& zplane)
+vec3 Math::ScreenLocation2WorldLocationPZ(vec2 screenLocation, vec2 screenSize,
+	const Viewport3D& viewport3D, float zplane)
 {
 	vec3 screenRay;
 	vec4 rayWorld;
@@ -61,7 +61,7 @@ vec3 Math::ScreenLocation2WorldLocationPZ(const vec2& screenLocation, const vec2
 	return worldPos;
 }
 
-vec3 Math::ScreenLocation2WorldLocation(const vec2& screenLocation, const vec2& screenSize,
+vec3 Math::ScreenLocation2WorldLocation(vec2 screenLocation, vec2 screenSize,
 	const ViewportOrtho3D& viewport3D)
 {
 	const float glX = (2.0f * screenLocation.X) / screenSize.X - 1.0f;
@@ -74,8 +74,8 @@ vec3 Math::ScreenLocation2WorldLocation(const vec2& screenLocation, const vec2& 
 	return world;
 }
 
-vec3 Math::ScreenLocation2WorldLocationPY(const vec2& screenLocation, const vec2& screenSize,
-	const ViewportOrtho3D& viewport3D, const float& yplane)
+vec3 Math::ScreenLocation2WorldLocationPY(vec2 screenLocation, vec2 screenSize,
+	const ViewportOrtho3D& viewport3D, float yplane)
 {
 	const float glX = (2.0f * screenLocation.X) / screenSize.X - 1.0f;
 	const float glY = -((2.0f * screenLocation.Y) / screenSize.Y - 1.0f);
@@ -87,8 +87,8 @@ vec3 Math::ScreenLocation2WorldLocationPY(const vec2& screenLocation, const vec2
 	return world;
 }
 
-vec3 Math::ScreenLocation2WorldLocationPX(const vec2& screenLocation, const vec2& screenSize,
-	const ViewportOrtho3D& viewport3D, const float& xplane)
+vec3 Math::ScreenLocation2WorldLocationPX(vec2 screenLocation, vec2 screenSize,
+	const ViewportOrtho3D& viewport3D, float xplane)
 {
 	const float glX = (2.0f * screenLocation.X) / screenSize.X - 1.0f;
 	const float glY = -((2.0f * screenLocation.Y) / screenSize.Y - 1.0f);
@@ -100,8 +100,8 @@ vec3 Math::ScreenLocation2WorldLocationPX(const vec2& screenLocation, const vec2
 	return world;
 }
 
-vec3 Math::ScreenLocation2WorldLocationPZ(const vec2& screenLocation, const vec2& screenSize,
-	const ViewportOrtho3D& viewport3D, const float& zplane)
+vec3 Math::ScreenLocation2WorldLocationPZ(vec2 screenLocation, vec2 screenSize,
+	const ViewportOrtho3D& viewport3D, float zplane)
 {
 	const float glX = (2.0f * screenLocation.X) / screenSize.X - 1.0f;
 	const float glY = -((2.0f * screenLocation.Y) / screenSize.Y - 1.0f);
@@ -116,20 +116,18 @@ vec3 Math::ScreenLocation2WorldLocationPZ(const vec2& screenLocation, const vec2
 /*======================================================
 ======================================================*/
 
-inline void DrawMath_ScreenLoc2WorldLoc(const vec2& screenLocation, const vec2& screenSize, const Viewport3D& viewport3D,
+inline void DrawMath_ScreenLoc2WorldLoc(vec2 screenLocation, vec2 screenSize, const Viewport3D& viewport3D,
 	vec3& screenRay, vec4& rayWorld)
 {
 	const float glCoordX = (2.0f * screenLocation.X) / screenSize.X - 1.0f;
 	const float glCoordY = -((2.0f * screenLocation.Y) / screenSize.Y - 1.0f);
 	vec4 clipCoords = vec4(glCoordX, glCoordY, 1.0f, 1.0f);
 
-	float proj[16];
-	bx::mtxProj(proj, viewport3D.Fov, screenSize.X / screenSize.Y, viewport3D.Near, viewport3D.Far, bgfx::getCaps()->homogeneousDepth);
+	mat4 proj = Math::ProjectPerspLH(viewport3D.Fov, screenSize.X / screenSize.Y, viewport3D.Near, viewport3D.Far);
 
-	mat4 projMat(proj);
 	mat4 invertedProjection;
-	if (!projMat.Inverse(invertedProjection))
-		invertedProjection = projMat;
+	if (!proj.Inverse(invertedProjection))
+		invertedProjection = proj;
 
 	vec4 eyeCoord = Math::Multiply(clipCoords, invertedProjection);
 	eyeCoord = eyeCoord / eyeCoord.W;

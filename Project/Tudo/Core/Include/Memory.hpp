@@ -12,6 +12,12 @@ namespace Tudo
 	namespace Memory
 	{
 		void Copy(void* dst, const void* src, uint64 size);
+
+		template<typename T, uint64 N>
+		uint64 ArrayCount(T(&arr)[N])
+		{
+			return N;
+		}
 	}
 
 	template<typename T>

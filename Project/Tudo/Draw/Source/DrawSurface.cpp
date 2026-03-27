@@ -3,31 +3,30 @@
 	Created by Norbert Gerberg.
 ======================================================*/
 #include "DrawSurface.hpp"
+#include "GraphicsDevice.hpp"
 #include "Window.hpp"
-#include <bx/bx.h>
+#include "Texture.hpp"
 
 using namespace Tudo;
 
-DrawSurface::DrawSurface(Renderer* renderer, uint16 viewid, vec2 size, void* wndHandle) : DrawObject(renderer)
+DrawSurface::DrawSurface(GraphicsDevice& gdevice, uint16 viewid, vec2 size, void* wndHandle) : DrawObject(gdevice)
 {
 	Location		= vec2i(0);
 	Resolution		= size;
 	AspectRatio		= size.X / size.Y;
-	ClearColor		= 0xfff;
+	ClearColor		= 0;
 	bTopMost		= true;
 	bTransparent	= false;
 
 	mViewId = viewid;
 	pWindowHandle = wndHandle;
 
-	mFbTex = new Texture(renderer);
-
-	bgfx::setViewMode(mViewId, bgfx::ViewMode::Sequential);
+	mFbTex = new Texture(gdevice);
 
 	mFbHandle = BGFX_INVALID_HANDLE;
 
-	bgfx::setViewRect(mViewId, Location.X, Location.Y, static_cast<uint16>(Resolution.X), static_cast<uint16>(Resolution.Y));
-	bgfx::setViewScissor(mViewId, Location.X, Location.Y, static_cast<uint16>(Resolution.X), static_cast<uint16>(Resolution.Y));
+	bgfx::setViewRect(mViewId, (uint16)Location.X, (uint16)Location.Y, (uint16)Resolution.X, (uint16)Resolution.Y);
+	bgfx::setViewScissor(mViewId, (uint16)Location.X, (uint16)Location.Y, (uint16)Resolution.X, (uint16)Resolution.Y);
 	Clear();
 }
 
@@ -45,7 +44,7 @@ void DrawSurface::Clear()
 	if (!bTransparent)
 		flags |= BGFX_CLEAR_COLOR;
 
-	bgfx::setViewClear(mViewId, flags, ClearColor, 1.0f, 0);
+	bgfx::setViewClear(mViewId, flags, ClearColor.ToInt());
 }
 
 void DrawSurface::OnResize(vec2 size)
@@ -60,8 +59,8 @@ void DrawSurface::OnResize(vec2 size)
 		SetFBViewId();
 	}
 
-	bgfx::setViewRect(mViewId, Location.X, Location.Y, static_cast<uint16>(Resolution.X), static_cast<uint16>(Resolution.Y));
-	bgfx::setViewScissor(mViewId, Location.X, Location.Y, static_cast<uint16>(Resolution.X), static_cast<uint16>(Resolution.Y));
+	bgfx::setViewRect(mViewId, (uint16)Location.X, (uint16)Location.Y, (uint16)Resolution.X, (uint16)Resolution.Y);
+	bgfx::setViewScissor(mViewId, (uint16)Location.X, (uint16)Location.Y, (uint16)Resolution.X, (uint16)Resolution.Y);
 }
 
 uint16 DrawSurface::ViewID() const

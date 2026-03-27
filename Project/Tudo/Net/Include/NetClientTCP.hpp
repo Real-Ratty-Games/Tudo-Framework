@@ -13,7 +13,7 @@ namespace Tudo
 	class NetClientTCP : public NetClient
 	{
 	public:
-		void				Initialize(uint16 port, strgv ip);
+		NetClientTCP(uint16 port, strgv ip);
 		int					Run();
 		ENetClientStatusTCP	Status();
 

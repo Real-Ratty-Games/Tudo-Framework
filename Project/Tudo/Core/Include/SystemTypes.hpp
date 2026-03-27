@@ -11,9 +11,7 @@
 #include "Matrix4.hpp"
 #include "Quaternion.hpp"
 
-/// <summary>
 /// Shorter, more clearer system types
-/// </summary>
 namespace Tudo
 {
 	typedef std::string				strg;

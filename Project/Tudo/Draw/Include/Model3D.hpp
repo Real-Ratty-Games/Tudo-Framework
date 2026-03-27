@@ -10,14 +10,14 @@
 
 namespace Tudo
 {
-	class Renderer;
+	class GraphicsDevice;
 
 	class Model3D : public DrawObject
 	{
 	public:
-		Model3D(Renderer* renderer);
+		Model3D(GraphicsDevice& gdevice);
 		~Model3D();
-		const std::vector<Mesh3D>& Meshes();
+		const std::vector<Mesh3D>& Meshes() const;
 
 		friend class AssetLoader;
 

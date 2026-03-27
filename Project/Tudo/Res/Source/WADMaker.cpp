@@ -100,7 +100,7 @@ void WADMaker::MakeAll(strgv fileroot, strgv outloc, bool saveExt)
 	for (auto& it : totalpaths) Make(it, outloc, saveExt);
 }
 
-void WADMaker::MakeUnique(strgv filename, strgv outloc, std::vector<WADMemItem>& data)
+void WADMaker::MakeUnique(strgv filename, strgv outloc, const std::vector<WADMemItem>& data)
 {
 	const strg soutloc(outloc);
 	strg OUTPATH = soutloc + strg(filename);
@@ -145,13 +145,7 @@ void WADMaker::MakeUnique(strgv filename, strgv outloc, std::vector<WADMemItem>&
 /*======================================================
 ======================================================*/
 
-/// <summary>
 /// Returns list of files in a directory that are of valid structure
-/// </summary>
-/// <param name="filepath"></param>
-/// <param name="on"></param>
-/// <param name="saveExt"></param>
-/// <returns></returns>
 std::vector<strg> WADMaker_GetFilesinDir(strgv filepath, bool on, bool saveExt)
 {
 	if (std::filesystem::exists(filepath))
@@ -175,11 +169,7 @@ std::vector<strg> WADMaker_GetFilesinDir(strgv filepath, bool on, bool saveExt)
 	return {};
 }
 
-/// <summary>
 /// Returns list of file types in a directory that are of valid structure
-/// </summary>
-/// <param name="filepath"></param>
-/// <returns></returns>
 std::vector<uint8> WADMaker_GetFiletypesinDir(strgv filepath)
 {
 	std::vector<strg> image_ext = {

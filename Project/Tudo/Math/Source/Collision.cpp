@@ -7,13 +7,13 @@
 
 using namespace Tudo::Math;
 
-bool Collision::Intersect(const vec2& point, const RectCollider& rect)
+bool Collision::Intersect(vec2 point, const RectCollider& rect)
 {
 	return point.X >= rect.Location.X && point.X <= rect.Location.X + rect.Size.X &&
 		point.Y >= rect.Location.Y && point.Y <= rect.Location.Y + rect.Size.Y;
 }
 
-bool Collision::Intersect(const vec2& point, const CircleCollider& circle)
+bool Collision::Intersect(vec2 point, const CircleCollider& circle)
 {
 	float dx = point.X - circle.Location.X;
 	float dy = point.Y - circle.Location.Y;
@@ -67,14 +67,14 @@ bool Collision::Intersect(const BoxCollider& a, const BoxCollider& b)
 		a.Min.Z < b.Max.Z);
 }
 
-bool Collision::Intersect(const vec3& point, const BoxCollider& box)
+bool Collision::Intersect(vec3 point, const BoxCollider& box)
 {
 	return (point.X > box.Min.X && point.X < box.Max.X &&
 		point.Y > box.Min.Y && point.Y < box.Max.Y &&
 		point.Z > box.Min.Z && point.Z < box.Max.Z);
 }
 
-bool Collision::Intersect(const vec3& point, const SphereCollider& sphere)
+bool Collision::Intersect(vec3 point, const SphereCollider& sphere)
 {
 	const vec3 dist = sphere.Location - point;
 	const float distSq = vec3::Dot(dist, dist);

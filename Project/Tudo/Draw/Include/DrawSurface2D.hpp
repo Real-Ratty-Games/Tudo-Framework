@@ -9,12 +9,12 @@
 
 namespace Tudo
 {
-	class Renderer;
+	class GraphicsDevice;
 
 	class DrawSurface2D : public DrawSurface
 	{
 	public:
-		DrawSurface2D(Renderer* renderer, uint16 viewid, vec2 size, void* wndHandle);
+		DrawSurface2D(GraphicsDevice& gdevice, uint16 viewid, vec2 size, void* wndHandle);
 
 	protected:
 		void UpdateFB(vec2i texSize, bgfx::TextureFormat::Enum format = bgfx::TextureFormat::RGBA8);

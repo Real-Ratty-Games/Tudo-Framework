@@ -3,11 +3,11 @@
 	Created by Norbert Gerberg.
 ======================================================*/
 #include "Model3D.hpp"
-#include "Renderer.hpp"
+#include "GraphicsDevice.hpp"
 
 using namespace Tudo;
 
-Model3D::Model3D(Renderer* renderer) : DrawObject(renderer) {}
+Model3D::Model3D(GraphicsDevice& gdevice) : DrawObject(gdevice) {}
 
 Model3D::~Model3D()
 {
@@ -20,7 +20,7 @@ Model3D::~Model3D()
 	}
 }
 
-const std::vector<Mesh3D>& Model3D::Meshes()
+const std::vector<Mesh3D>& Model3D::Meshes() const
 {
 	return mMeshes;
 }

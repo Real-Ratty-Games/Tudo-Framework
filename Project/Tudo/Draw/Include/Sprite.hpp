@@ -11,15 +11,13 @@ namespace Tudo
 {
 	class Texture;
 
-	/// <summary>
 	/// 2D Quad Sprite
-	/// </summary>
 	class Sprite
 	{
 	public:
-		Sprite(Texture* texture);
-		void SetTexture(Texture* texture);
-		Texture* GetTexture();
+		Sprite(Texture& texture);
+		void SetTexture(Texture& texture);
+		Texture* GetTexture() const;
 
 	public:
 		vec2		RotationPivot;

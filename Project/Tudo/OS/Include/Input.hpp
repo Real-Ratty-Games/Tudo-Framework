@@ -2,32 +2,32 @@
 	Copyright (c) 2026 Real Ratty Games.
 	Created by Norbert Gerberg.
 ======================================================*/
-#ifndef KEYBOARD_HPP_
-#define KEYBOARD_HPP_
+#ifndef INPUT_HPP_
+#define INPUT_HPP_
 #include "SystemTypes.hpp"
 #include "InputTypes.hpp"
+#include <vector>
 
 namespace Tudo
 {
-	/// <summary>
-	/// Keyboard input functions
-	/// </summary>
-	namespace Keyboard
+	class Input
 	{
-		bool	KeyDown(KeyboardKey key);
-		bool	KeyUp(KeyboardKey key);
-		bool	KeyPressed(KeyboardKey key);
-	}
+	public:
+		bool KeyboardKeyDown(KeyboardKey key);
+		bool KeyboardKeyUp(KeyboardKey key);
+		bool KeyboardKeyPressed(KeyboardKey key);
+		bool MouseButtonDown(MouseButton button);
+		bool MouseButtonUp(MouseButton button);
+		bool MouseButtonPressed(MouseButton button);
+		vec2 MouseCursorLocation();
 
-	/// <summary>
-	/// Mouse input functions
-	/// </summary>
-	namespace Mouse
-	{
-		bool	ButtonDown(MouseButton button);
-		bool	ButtonUp(MouseButton button);
-		bool	ButtonPressed(MouseButton button);
-		vec2	CursorLocation();
-	}
+	private:
+		bool CheckKeyboardKey(int key);
+		bool CheckMouseButton(int button);
+
+	private:
+		std::vector<KeyboardKey> mPressedKeyboardKeys;
+		std::vector<MouseButton> mPressedMouseButtons;
+	};
 }
 #endif

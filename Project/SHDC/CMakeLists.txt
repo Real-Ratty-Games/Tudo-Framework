@@ -5,7 +5,7 @@ if (WIN32)
 	set_target_properties(SHDC PROPERTIES
 		VS_DEBUGGER_WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/../GameDir)
 else()
-    add_executable(SHDC MACROS ${SOURCES})
+    add_executable(SHDC ${SOURCES})
 endif()
 
 target_include_directories(SHDC PUBLIC

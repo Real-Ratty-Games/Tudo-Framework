@@ -7,6 +7,7 @@
 ======================================================*/
 #include <iostream>
 #include <fstream>
+#include <sstream>
 #include <vector>
 #include "SystemTypes.hpp"
 #include "FileSystem.hpp"

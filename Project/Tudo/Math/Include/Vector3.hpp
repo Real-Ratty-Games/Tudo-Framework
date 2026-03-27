@@ -8,10 +8,7 @@
 
 namespace Tudo
 {
-	/// <summary>
 	/// Vector 3D
-	/// </summary>
-	/// <typeparam name="T"></typeparam>
 	template<typename T>
 	class Vector3
 	{
@@ -44,7 +41,8 @@ namespace Tudo
         template<typename U>
         Vector3(const Vector3<U>& other)
             : X(static_cast<T>(other.X)),
-            Y(static_cast<T>(other.Y))
+            Y(static_cast<T>(other.Y)),
+            Z(static_cast<T>(other.Z))
         { }
 
         inline T* Ptr()
@@ -82,12 +80,7 @@ namespace Tudo
             return Vector3<T>(-X, -Y, -Z);
         }
 
-        /// <summary>
         /// Right hand cross product
-        /// </summary>
-        /// <param name="left"></param>
-        /// <param name="right"></param>
-        /// <returns></returns>
         static Vector3<T> Cross(const Vector3<T>& left, const Vector3<T>& right)
         {
             return Vector3<T>(

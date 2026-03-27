@@ -8,22 +8,18 @@
 
 using namespace Tudo;
 
-Sprite::Sprite(Texture* texture)
+Sprite::Sprite(Texture& texture)
 {
-	if (texture == nullptr)
-		throw BigError("Sprite creation failed: Texture cannot be nullptr!");
-	pTexture	= texture;
+	pTexture	= &texture;
 	Size		= pTexture->Size();
 }
 
-void Sprite::SetTexture(Texture* texture)
+void Sprite::SetTexture(Texture& texture)
 {
-	if (texture == nullptr)
-		throw BigError("Texture cannot be nullptr!");
-	pTexture = texture;
+	pTexture = &texture;
 }
 
-Texture* Sprite::GetTexture()
+Texture* Sprite::GetTexture() const
 {
 	return pTexture;
 }

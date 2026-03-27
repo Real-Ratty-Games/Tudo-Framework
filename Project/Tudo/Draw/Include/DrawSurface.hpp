@@ -8,16 +8,16 @@
 #include "Memory.hpp"
 #include "DrawObject.hpp"
 #include "DrawData.hpp"
-#include "Texture.hpp"
 
 namespace Tudo
 {
-	class Renderer;
+	class GraphicsDevice;
+	class Texture;
 
 	class DrawSurface : public DrawObject
 	{
 	public:
-		DrawSurface(Renderer* renderer, uint16 viewid, vec2 size, void* wndHandle);
+		DrawSurface(GraphicsDevice& gdevice, uint16 viewid, vec2 size, void* wndHandle);
 		~DrawSurface();
 		void Clear();
 		void OnResize(vec2 size);
@@ -33,7 +33,7 @@ namespace Tudo
 		vec2i					Location;
 		vec2					Resolution;
 		float					AspectRatio;
-		uint					ClearColor;
+		Color					ClearColor;
 		bool					bTopMost;
 		bool					bTransparent;
 

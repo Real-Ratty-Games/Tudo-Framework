@@ -8,6 +8,11 @@
 
 using namespace Tudo;
 
+NetClient::~NetClient()
+{
+    Network::CloseSocket(mSocket);
+}
+
 void NetClient::Initialize(uint16 port, strgv ip)
 {
     mPort    = port;
@@ -21,9 +26,4 @@ void NetClient::Initialize(uint16 port, strgv ip)
 
     mService.sin_family = AF_INET;
     mService.sin_port = htons(port);
-}
-
-void NetClient::Release()
-{
-    Network::CloseSocket(mSocket);
 }

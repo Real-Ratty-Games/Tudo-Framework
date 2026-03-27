@@ -5,102 +5,75 @@
 #include "Input.hpp"
 #include <SDL3/SDL_keyboard.h>
 #include <SDL3/SDL_mouse.h>
-#include <vector>
 
 using namespace Tudo;
 
-/// Stores pressed keys/buttons
-static std::vector<KeyboardKey> _PressedKeyboardKeys;
-static std::vector<MouseButton> _PressedMouseButtons;
-
-static bool Input_CheckKeyboardKey(int key);
-static bool Input_CheckMouseButton(int button);
-
-/*======================================================
-	Keyboard
-======================================================*/
-
-bool Keyboard::KeyDown(KeyboardKey key)
+bool Input::KeyboardKeyDown(KeyboardKey key)
 {
-	return Input_CheckKeyboardKey((int)key);
+	return CheckKeyboardKey((int)key);
 }
 
-bool Keyboard::KeyUp(KeyboardKey key)
+bool Input::KeyboardKeyUp(KeyboardKey key)
 {
-	return !KeyDown(key);
+	return !KeyboardKeyDown(key);
 }
 
-bool Keyboard::KeyPressed(KeyboardKey key)
+bool Input::KeyboardKeyPressed(KeyboardKey key)
 {
-	const bool down = Input_CheckKeyboardKey((int)key);
-	auto it = std::find(_PressedKeyboardKeys.begin(), _PressedKeyboardKeys.end(), key);
-	const bool pressed = (it != _PressedKeyboardKeys.end());
+	const bool down = CheckKeyboardKey((int)key);
+	auto it = std::find(mPressedKeyboardKeys.begin(), mPressedKeyboardKeys.end(), key);
+	const bool pressed = (it != mPressedKeyboardKeys.end());
 
 	if (down && !pressed)
 	{
-		_PressedKeyboardKeys.push_back(key);
+		mPressedKeyboardKeys.push_back(key);
 		return true;
 	}
-	else if (!down && pressed) _PressedKeyboardKeys.erase(it);
+	else if (!down && pressed) mPressedKeyboardKeys.erase(it);
 	return false;
 }
 
-/*======================================================
-	Mouse
-======================================================*/
-
-bool Mouse::ButtonDown(MouseButton button)
+bool Input::MouseButtonDown(MouseButton button)
 {
-	return Input_CheckMouseButton((int)button);
+	return CheckMouseButton((int)button);
 }
 
-bool Mouse::ButtonUp(MouseButton button)
+bool Input::MouseButtonUp(MouseButton button)
 {
-	return !ButtonDown(button);
+	return !MouseButtonDown(button);
 }
 
-bool Mouse::ButtonPressed(MouseButton button)
+bool Input::MouseButtonPressed(MouseButton button)
 {
-	const bool down = Input_CheckMouseButton((int)button);
-	auto it = std::find(_PressedMouseButtons.begin(), _PressedMouseButtons.end(), button);
-	const bool pressed = (it != _PressedMouseButtons.end());
+	const bool down = CheckMouseButton((int)button);
+	auto it = std::find(mPressedMouseButtons.begin(), mPressedMouseButtons.end(), button);
+	const bool pressed = (it != mPressedMouseButtons.end());
 
 	if (down && !pressed)
 	{
-		_PressedMouseButtons.push_back(button);
+		mPressedMouseButtons.push_back(button);
 		return true;
 	}
-	else if (!down && pressed) _PressedMouseButtons.erase(it);
+	else if (!down && pressed) mPressedMouseButtons.erase(it);
 	return false;
 }
 
-vec2 Mouse::CursorLocation()
+vec2 Input::MouseCursorLocation()
 {
 	float x, y;
 	SDL_GetMouseState(&x, &y);
 	return vec2(x, y);
 }
 
-/*======================================================
-======================================================*/
-
-/// <summary>
 /// Returns true if keyboard key is held down
-/// </summary>
-/// <param name="key"></param>
-/// <returns></returns>
-bool Input_CheckKeyboardKey(int key)
+bool Input::CheckKeyboardKey(int key)
 {
 	const bool* scode = SDL_GetKeyboardState(nullptr);
 	return scode[key];
 }
 
-/// <summary>
 /// Returns true if mouse button is held down
-/// </summary>
-/// <param name="button"></param>
-/// <returns></returns>
-bool Input_CheckMouseButton(int button)
+bool Input::CheckMouseButton(int button)
 {
 	SDL_MouseButtonFlags flags = SDL_GetMouseState(nullptr, nullptr);
 	return (flags == button);

@@ -4,18 +4,11 @@
 ======================================================*/
 #include "DrawObject.hpp"
 #include "BigError.hpp"
-#include "Renderer.hpp"
+#include "GraphicsDevice.hpp"
 
 using namespace Tudo;
 
-DrawObject::DrawObject(Renderer* renderer)
+DrawObject::DrawObject(GraphicsDevice& gdevice)
 {
-	if (!renderer)
-		throw BigError("Instance requires a renderer!");
-	pRenderer = renderer;
-}
-
-Renderer* DrawObject::GetRenderer()
-{
-	return pRenderer;
+	pGDevice = &gdevice;
 }

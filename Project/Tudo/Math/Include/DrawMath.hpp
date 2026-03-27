@@ -10,28 +10,28 @@
 
 namespace Tudo::Math
 {
-	vec3 ScreenLocation2WorldLocation(const vec2& screenLocation, const vec2& screenSize,
-		const Viewport3D& viewport3D, const float& distance);
+	vec3 ScreenLocation2WorldLocation(vec2 screenLocation, vec2 screenSize,
+		const Viewport3D& viewport3D, float distance);
 
-	vec3 ScreenLocation2WorldLocationPY(const vec2& screenLocation, const vec2& screenSize,
-		const Viewport3D& viewport3D, const float& yplane);
+	vec3 ScreenLocation2WorldLocationPY(vec2 screenLocation, vec2 screenSize,
+		const Viewport3D& viewport3D, float yplane);
 
-	vec3 ScreenLocation2WorldLocationPX(const vec2& screenLocation, const vec2& screenSize,
-		const Viewport3D& viewport3D, const float& xplane);
+	vec3 ScreenLocation2WorldLocationPX(vec2 screenLocation, vec2 screenSize,
+		const Viewport3D& viewport3D, float xplane);
 
-	vec3 ScreenLocation2WorldLocationPZ(const vec2& screenLocation, const vec2& screenSize,
-		const Viewport3D& viewport3D, const float& zplane);
+	vec3 ScreenLocation2WorldLocationPZ(vec2 screenLocation, vec2 screenSize,
+		const Viewport3D& viewport3D, float zplane);
 
-	vec3 ScreenLocation2WorldLocation(const vec2& screenLocation, const vec2& screenSize,
+	vec3 ScreenLocation2WorldLocation(vec2 screenLocation, vec2 screenSize,
 		const ViewportOrtho3D& viewport3D);
 
-	vec3 ScreenLocation2WorldLocationPY(const vec2& screenLocation, const vec2& screenSize,
-		const ViewportOrtho3D& viewport3D, const float& yplane);
+	vec3 ScreenLocation2WorldLocationPY(vec2 screenLocation, vec2 screenSize,
+		const ViewportOrtho3D& viewport3D, float yplane);
 
-	vec3 ScreenLocation2WorldLocationPX(const vec2& screenLocation, const vec2& screenSize,
-		const ViewportOrtho3D& viewport3D, const float& xplane);
+	vec3 ScreenLocation2WorldLocationPX(vec2 screenLocation, vec2 screenSize,
+		const ViewportOrtho3D& viewport3D, float xplane);
 
-	vec3 ScreenLocation2WorldLocationPZ(const vec2& screenLocation, const vec2& screenSize,
-		const ViewportOrtho3D& viewport3D, const float& zplane);
+	vec3 ScreenLocation2WorldLocationPZ(vec2 screenLocation, vec2 screenSize,
+		const ViewportOrtho3D& viewport3D, float zplane);
 }
 #endif
