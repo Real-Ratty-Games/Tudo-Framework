@@ -17,7 +17,7 @@ namespace Tudo
 	class ModelRenderer : public Renderer
 	{
 	public:
-		ModelRenderer(GraphicsDevice* gdevice, DrawPipeline* pipeline);
+		ModelRenderer(GraphicsDevice& gdevice, DrawPipeline& pipeline);
 
 		void			DrawModel(const Model3D& model);
 		virtual void	DrawMesh(const Mesh3D& mesh) = 0;

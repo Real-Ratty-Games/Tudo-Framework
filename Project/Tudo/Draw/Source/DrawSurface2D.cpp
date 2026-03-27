@@ -8,7 +8,7 @@
 
 using namespace Tudo;
 
-DrawSurface2D::DrawSurface2D(GraphicsDevice* gdevice, uint16 viewid, vec2 size, void* wndHandle) : DrawSurface(gdevice, viewid, size, wndHandle)
+DrawSurface2D::DrawSurface2D(GraphicsDevice& gdevice, uint16 viewid, vec2 size, void* wndHandle) : DrawSurface(gdevice, viewid, size, wndHandle)
 {
 	if (viewid != 0)
 	{

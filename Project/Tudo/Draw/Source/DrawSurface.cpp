@@ -9,7 +9,7 @@
 
 using namespace Tudo;
 
-DrawSurface::DrawSurface(GraphicsDevice* gdevice, uint16 viewid, vec2 size, void* wndHandle) : DrawObject(gdevice)
+DrawSurface::DrawSurface(GraphicsDevice& gdevice, uint16 viewid, vec2 size, void* wndHandle) : DrawObject(gdevice)
 {
 	Location		= vec2i(0);
 	Resolution		= size;

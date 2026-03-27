@@ -17,7 +17,7 @@ namespace Tudo
 	class DrawSurface3D : public DrawSurface
 	{
 	public:
-		DrawSurface3D(GraphicsDevice* gdevice, uint16 viewid, vec2 size, void* wndHandle, bool depthOnly);
+		DrawSurface3D(GraphicsDevice& gdevice, uint16 viewid, vec2 size, void* wndHandle, bool depthOnly);
 		Texture* GetDepthTexture();
 
 	protected:

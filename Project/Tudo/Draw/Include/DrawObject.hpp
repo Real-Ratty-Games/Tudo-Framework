@@ -12,8 +12,7 @@ namespace Tudo
 	class DrawObject
 	{
 	public:
-		DrawObject(GraphicsDevice* gdevice);
-		GraphicsDevice* GetRenderer();
+		DrawObject(GraphicsDevice& gdevice);
 
 	protected:
 		GraphicsDevice* pGDevice;

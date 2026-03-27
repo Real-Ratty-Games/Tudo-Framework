@@ -12,12 +12,12 @@ namespace Tudo
 {
 	class GraphicsDevice;
 	class DrawPipeline;
-	class Mesh3D;
+	struct Mesh3D;
 
 	class ColorModelRenderer : public ModelRenderer
 	{
 	public:
-		ColorModelRenderer(GraphicsDevice* gdevice, DrawPipeline* pipeline);
+		ColorModelRenderer(GraphicsDevice& gdevice, DrawPipeline& pipeline);
 		void DrawMesh(const Mesh3D& mesh);
 		void SetColor(Color color);
 

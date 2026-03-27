@@ -53,12 +53,12 @@ void SpriteAnimator::Tick()
 	mAlarm.Tick();
 }
 
-SpriteAnimation* SpriteAnimator::GetAnimation()
+SpriteAnimation* SpriteAnimator::GetAnimation() const
 {
 	return pAnimation;
 }
 
-vec2 SpriteAnimator::GetCurrentIndex()
+vec2 SpriteAnimator::GetCurrentIndex() const
 {
 	return mCurrentIndex;
 }

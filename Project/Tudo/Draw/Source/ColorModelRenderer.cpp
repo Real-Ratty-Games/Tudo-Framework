@@ -10,7 +10,7 @@
 
 using namespace Tudo;
 
-ColorModelRenderer::ColorModelRenderer(GraphicsDevice* gdevice, DrawPipeline* pipeline) : ModelRenderer(gdevice, pipeline) {}
+ColorModelRenderer::ColorModelRenderer(GraphicsDevice& gdevice, DrawPipeline& pipeline) : ModelRenderer(gdevice, pipeline) {}
 
 void ColorModelRenderer::DrawMesh(const Mesh3D& mesh)
 {

@@ -12,7 +12,7 @@
 
 using namespace Tudo;
 
-UnlitModelRenderer::UnlitModelRenderer(GraphicsDevice* gdevice, DrawPipeline* pipeline) : ModelRenderer(gdevice, pipeline)
+UnlitModelRenderer::UnlitModelRenderer(GraphicsDevice& gdevice, DrawPipeline& pipeline) : ModelRenderer(gdevice, pipeline)
 {
 	pTexture = nullptr;
 }

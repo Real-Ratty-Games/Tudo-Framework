@@ -28,7 +28,7 @@
 
 using namespace Tudo;
 
-AssetLoader::AssetLoader(GraphicsDevice* gdevice, strgv rootFolder) : DrawObject(gdevice)
+AssetLoader::AssetLoader(GraphicsDevice& gdevice, strgv rootFolder) : DrawObject(gdevice)
 {
 	mRootDir = FileSystem::GetResourcePath(rootFolder).string();
 }
@@ -50,11 +50,11 @@ void AssetLoader::LoadTextureFromFile(Texture& texture, strgv filename, uint64 f
 	LoadTexture(texture, data, flags, nrComponents, texturename, width, height, mipgen);
 }
 
-void AssetLoader::LoadTextureFromMemory(Texture& texture, std::vector<uint8>& memData, uint64 flags, strgv texturename, bool flipUV, bool mipgen)
+void AssetLoader::LoadTextureFromMemory(Texture& texture, const std::vector<uint8>& memData, uint64 flags, strgv texturename, bool flipUV, bool mipgen)
 {
 	stbi_set_flip_vertically_on_load(flipUV);
 	int width, height, nrComponents;
-	uint8* data = stbi_load_from_memory(memData.data(), memData.size(), &width, &height, &nrComponents, 0);
+	uint8* data = stbi_load_from_memory(memData.data(), (uint)memData.size(), &width, &height, &nrComponents, 0);
 
 	if (!data)
 	{
@@ -87,7 +87,7 @@ void AssetLoader::LoadTextureGPUFromFile(Texture& texture, strgv filename, uint6
 	LoadGPUTexture(texture, data, flags, texturename);
 }
 
-void AssetLoader::LoadTextureGPUFromMemory(Texture& texture, std::vector<uint8>& memData, uint64 flags, strgv texturename)
+void AssetLoader::LoadTextureGPUFromMemory(Texture& texture, const std::vector<uint8>& memData, uint64 flags, strgv texturename)
 {
 	LoadGPUTexture(texture, memData, flags, texturename);
 }
@@ -144,7 +144,7 @@ void AssetLoader::LoadModelFromFile(Model3D& model, strgv filename)
 	}
 }
 
-void AssetLoader::LoadModelFromMemory(Model3D& model, std::vector<uint8>& data)
+void AssetLoader::LoadModelFromMemory(Model3D& model, const std::vector<uint8>& data)
 {
 	if (data.empty())
 		throw BigError("Data is empty!");
@@ -215,7 +215,7 @@ void AssetLoader::StreamSoundFromFile(SoundWavStream& obj, strgv filepath)
 	}
 }
 
-void AssetLoader::LoadSoundFromMemory(SoundWav& obj, std::vector<uint8>& data)
+void AssetLoader::LoadSoundFromMemory(SoundWav& obj, const std::vector<uint8>& data)
 {
 	if (obj.Handle.loadMem(data.data(), static_cast<uint>(data.size()), false, false) != SoLoud::SO_NO_ERROR)
 		throw BigError("Failed loading sound file from memory!");
@@ -350,13 +350,13 @@ void AssetLoader::LoadTexture(Texture& texture, uint8* data, uint64 flags, int n
 	stbi_set_flip_vertically_on_load(false);
 }
 
-void AssetLoader::LoadGPUTexture(Texture& texture, std::vector<uint8>& data, uint64 flags, strgv texturename)
+void AssetLoader::LoadGPUTexture(Texture& texture, const std::vector<uint8>& data, uint64 flags, strgv texturename)
 {
 	bx::DefaultAllocator allc;
 #if __APPLE__
 	bimg::ImageContainer* ic = bimg::imageParseKtx(&allc, data.data(), data.size(), nullptr);
 #else
-	bimg::ImageContainer* ic = bimg::imageParseDds(&allc, data.data(), data.size(), nullptr);
+	bimg::ImageContainer* ic = bimg::imageParseDds(&allc, data.data(), (uint)data.size(), nullptr);
 #endif
 	if (!ic)
 	{
@@ -387,11 +387,11 @@ void AssetLoader::LoadGPUTexture(Texture& texture, std::vector<uint8>& data, uin
 
 void AssetLoader::CreateMesh(Mesh3D& modelMesh, MeshData& mdata)
 {
-	modelMesh.VBH = pGDevice->CreateVertexBuffer(mdata.Vertices.data(), mdata.VSize * sizeof(MeshVertex), pGDevice->mMesh3DVBLayout);
+	modelMesh.VBH = pGDevice->CreateVertexBuffer(mdata.Vertices.data(), (uint)(mdata.VSize * sizeof(MeshVertex)), pGDevice->mMesh3DVBLayout);
 	if (!bgfx::isValid(modelMesh.VBH))
 		throw BigError("Vertex Buffer is invalid!");
 
-	modelMesh.IBH = pGDevice->CreateIndexBuffer(mdata.Indices.data(), mdata.ISize * sizeof(uint16));
+	modelMesh.IBH = pGDevice->CreateIndexBuffer(mdata.Indices.data(), (uint)(mdata.ISize * sizeof(uint16)));
 	if (!bgfx::isValid(modelMesh.IBH))
 		throw BigError("Index Buffer is invalid!");
 }
@@ -402,7 +402,7 @@ const bgfx::Memory* AssetLoader::ShaderGetMemory(std::ifstream& file)
 	const uint64 size = file.tellg();
 	file.seekg(0, std::ios::beg);
 
-	const bgfx::Memory* mem = bgfx::alloc(size + 1);
+	const bgfx::Memory* mem = bgfx::alloc((uint)size + 1);
 	file.read(reinterpret_cast<char*>(mem->data), size);
 	return mem;
 }

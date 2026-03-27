@@ -88,7 +88,7 @@ std::vector<char> FileSystem::ReadBinaryFile(strgv filepath)
 	return rtVl;
 }
 
-void FileSystem::WriteBinaryFile(strgv filepath, std::vector<char>& data)
+void FileSystem::WriteBinaryFile(strgv filepath, const std::vector<char>& data)
 {
 	std::ofstream file(filepath.data(), std::ios::binary);
 	file.write(data.data(), data.size());

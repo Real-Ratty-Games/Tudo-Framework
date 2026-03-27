@@ -23,14 +23,14 @@
 
 using namespace Tudo;
 
-GraphicsDevice::GraphicsDevice(Window* window, DrawAPI api, bool vsync)
+GraphicsDevice::GraphicsDevice(Window& window, DrawAPI api, bool vsync)
 {
 	mQuad2DVB = BGFX_INVALID_HANDLE;
 
 	bgfx::Init init;
-	init.platformData.nwh = window->GetNativePtr();
+	init.platformData.nwh = window.GetNativePtr();
 
-	const vec2i wndSize = window->GetSize();
+	const vec2i wndSize = window.GetSize();
 	init.resolution.width = wndSize.X;
 	init.resolution.height = wndSize.Y;
 
@@ -90,7 +90,7 @@ void GraphicsDevice::Printf(vec2i location, uint8 attr, strgv text)
 
 // bgfx::setViewClear(viewid, flags, color.ToInt(), 1.0f, 0);
 
-void GraphicsDevice::DrawTexture(Shader* shader, DrawSurface* surface, Texture* texture, vec2& rotpiv, vec2& size, Transform2D& transformation)
+void GraphicsDevice::DrawTexture(Shader& shader, const DrawSurface& surface, vec2 rotpiv, vec2 size, const Transform2D& transformation)
 {
 	vec2 rscale = size * transformation.Scale;
 
@@ -111,9 +111,9 @@ void GraphicsDevice::DrawTexture(Shader* shader, DrawSurface* surface, Texture* 
 	bgfx::setState(TUDO_RENDERER_SPRITE_STATE);
 
 	vec4 ucolor = vec4(transformation.ImageColor.R, transformation.ImageColor.G, transformation.ImageColor.B, transformation.ImageColor.A);
-	shader->SetUniform("color", ucolor.Ptr());
+	shader.SetUniform("color", ucolor.Ptr());
 
-	shader->Submit(surface->ViewID(), TUDO_RENDERER_SPRITE_FLAGS, true);
+	shader.Submit(surface.ViewID(), TUDO_RENDERER_SPRITE_FLAGS, true);
 }
 
 void GraphicsDevice::SetMesh(uint8 stream, const Mesh3D& mesh)
@@ -127,7 +127,7 @@ void GraphicsDevice::SetModelTransform(const mat4& mat)
 	bgfx::setTransform(mat.Ptr());
 }
 
-bgfx::VertexBufferHandle GraphicsDevice::CreateVertexBuffer(const void* data, uint size, bgfx::VertexLayout& layout)
+bgfx::VertexBufferHandle GraphicsDevice::CreateVertexBuffer(const void* data, uint size, const bgfx::VertexLayout& layout)
 {
 	return bgfx::createVertexBuffer(bgfx::copy(data, size), layout);
 }

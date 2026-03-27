@@ -15,7 +15,7 @@ namespace Tudo
 	class Texture : public DrawObject
 	{
 	public:
-		Texture(GraphicsDevice* gdevice);
+		Texture(GraphicsDevice& gdevice);
 		~Texture();
 
 		bgfx::TextureHandle&	Handle();

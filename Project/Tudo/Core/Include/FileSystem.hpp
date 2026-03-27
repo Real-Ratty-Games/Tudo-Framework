@@ -21,7 +21,7 @@ namespace Tudo::FileSystem
 	void					DirectoryCreate(strgv dir);
 	void					DirectoryRemove(strgv dir);
 	std::vector<char>		ReadBinaryFile(strgv filepath);
-	void					WriteBinaryFile(strgv filepath, std::vector<char>& data);
+	void					WriteBinaryFile(strgv filepath, const std::vector<char>& data);
 	void					WriteTextFile(strgv filepath, strgv text);
 
 	std::filesystem::path	GetResourcePath(strgv filename);

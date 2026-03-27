@@ -17,10 +17,10 @@ namespace Tudo
 	class Shader : public DrawObject
 	{
 	public:
-		Shader(GraphicsDevice* gdevice);
+		Shader(GraphicsDevice& gdevice);
 		~Shader();
 
-		void Submit(uint16 viewID, uint8 flags, const bool depth);
+		void Submit(uint16 viewID, uint8 flags, bool depth);
 
 		void InitUniform(strgv name, bgfx::UniformType::Enum type, uint16 nmb = 1);
 		void SetUniform(strgv name, const void* vl, uint16 nmb = 1);

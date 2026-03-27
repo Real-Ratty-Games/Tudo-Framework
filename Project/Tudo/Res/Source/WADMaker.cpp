@@ -100,7 +100,7 @@ void WADMaker::MakeAll(strgv fileroot, strgv outloc, bool saveExt)
 	for (auto& it : totalpaths) Make(it, outloc, saveExt);
 }
 
-void WADMaker::MakeUnique(strgv filename, strgv outloc, std::vector<WADMemItem>& data)
+void WADMaker::MakeUnique(strgv filename, strgv outloc, const std::vector<WADMemItem>& data)
 {
 	const strg soutloc(outloc);
 	strg OUTPATH = soutloc + strg(filename);

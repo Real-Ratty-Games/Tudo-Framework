@@ -15,7 +15,7 @@ namespace Tudo
 	class Renderer : public DrawObject
 	{
 	public:
-		Renderer(GraphicsDevice* gdevice, DrawPipeline* pipeline);
+		Renderer(GraphicsDevice& gdevice, DrawPipeline& pipeline);
 
 	protected:
 		DrawPipeline* pPipeline;

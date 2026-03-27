@@ -9,7 +9,7 @@
 
 using namespace Tudo;
 
-ModelRenderer::ModelRenderer(GraphicsDevice* gdevice, DrawPipeline* pipeline) : Renderer(gdevice, pipeline) {}
+ModelRenderer::ModelRenderer(GraphicsDevice& gdevice, DrawPipeline& pipeline) : Renderer(gdevice, pipeline) {}
 
 void ModelRenderer::DrawModel(const Model3D& model)
 {

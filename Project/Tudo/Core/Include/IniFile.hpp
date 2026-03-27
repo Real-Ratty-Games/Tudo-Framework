@@ -17,7 +17,7 @@ namespace Tudo
 		using Content = std::unordered_map<strg, Section>;
 
 		bool Open(strgv filename);
-		void OpenMem(std::vector<uint8>* mem);
+		void OpenMem(std::vector<uint8>& mem);
 		strg Read(strgv section, strgv key, strgv value);
 		void Write(strgv section, strgv key, strgv value);
 		void CloseMem();

@@ -11,9 +11,9 @@
 
 using namespace Tudo;
 
-BillboardRenderer::BillboardRenderer(GraphicsDevice* gdevice, DrawPipeline* pipeline) : Renderer(gdevice, pipeline) {}
+BillboardRenderer::BillboardRenderer(GraphicsDevice& gdevice, DrawPipeline& pipeline) : Renderer(gdevice, pipeline) {}
 
-void BillboardRenderer::Draw(Texture* texture, vec2 scale, Color color, bool cylindric)
+void BillboardRenderer::Draw(Texture& texture, vec2 scale, Color color, bool cylindric)
 {
 	Shader* shader = pPipeline->GetActiveShader();
 
@@ -24,7 +24,7 @@ void BillboardRenderer::Draw(Texture* texture, vec2 scale, Color color, bool cyl
 	vec4 scl = vec4(scale.X, scale.Y, cylindric ? 1.0f : 0.0f, 0.0f);
 	shader->SetUniform("scale", scl.Ptr());
 
-	shader->SetTexture(0, "s_texColor", *texture);
+	shader->SetTexture(0, "s_texColor", texture);
 
 	vec4 col = color.ToVec();
 	shader->SetUniform("color", col.Ptr());

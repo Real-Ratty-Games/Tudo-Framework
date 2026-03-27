@@ -13,12 +13,12 @@ namespace Tudo
 	class GraphicsDevice;
 	class DrawPipeline;
 	class Texture;
-	class Mesh3D;
+	struct Mesh3D;
 
 	class UnlitModelRenderer : public ModelRenderer
 	{
 	public:
-		UnlitModelRenderer(GraphicsDevice* gdevice, DrawPipeline* pipeline);
+		UnlitModelRenderer(GraphicsDevice& gdevice, DrawPipeline& pipeline);
 		void DrawMesh(const Mesh3D& mesh);
 		void SetTexture(Texture* texture);
 

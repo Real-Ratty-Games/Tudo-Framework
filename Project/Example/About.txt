@@ -1,0 +1,4 @@
+
+	A simple example program that renders a 3D model,
+	a billboard quad, and on-screen text, while the
+	camera smoothly rotates around the scene’s center.

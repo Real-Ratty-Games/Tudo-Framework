@@ -9,9 +9,7 @@
 
 using namespace Tudo;
 
-Renderer::Renderer(GraphicsDevice* gdevice, DrawPipeline* pipeline) : DrawObject(gdevice)
+Renderer::Renderer(GraphicsDevice& gdevice, DrawPipeline& pipeline) : DrawObject(gdevice)
 {
-	if (!pipeline)
-		throw BigError("Instance requires a DrawPipeline!");
-	pPipeline = pipeline;
+	pPipeline = &pipeline;
 }

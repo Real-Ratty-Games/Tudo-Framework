@@ -15,7 +15,7 @@ namespace Tudo
 	class Model3D : public DrawObject
 	{
 	public:
-		Model3D(GraphicsDevice* gdevice);
+		Model3D(GraphicsDevice& gdevice);
 		~Model3D();
 		const std::vector<Mesh3D>& Meshes() const;
 

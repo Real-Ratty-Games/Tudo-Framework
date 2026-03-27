@@ -17,7 +17,7 @@ namespace Tudo
 	class DrawSurface : public DrawObject
 	{
 	public:
-		DrawSurface(GraphicsDevice* gdevice, uint16 viewid, vec2 size, void* wndHandle);
+		DrawSurface(GraphicsDevice& gdevice, uint16 viewid, vec2 size, void* wndHandle);
 		~DrawSurface();
 		void Clear();
 		void OnResize(vec2 size);

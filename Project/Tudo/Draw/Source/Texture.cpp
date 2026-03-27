@@ -7,7 +7,7 @@
 
 using namespace Tudo;
 
-Texture::Texture(GraphicsDevice* gdevice) : DrawObject(gdevice)
+Texture::Texture(GraphicsDevice& gdevice) : DrawObject(gdevice)
 {
 	mHandle = BGFX_INVALID_HANDLE;
 }

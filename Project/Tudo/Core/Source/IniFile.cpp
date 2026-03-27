@@ -22,10 +22,10 @@ bool IniFile::Open(strgv filename)
     return true;
 }
 
-void IniFile::OpenMem(std::vector<uint8>* mem)
+void IniFile::OpenMem(std::vector<uint8>& mem)
 {
-    mMemBuffer = mem;
-    strg content(reinterpret_cast<const char*>(mem->data()), mem->size());
+    mMemBuffer = &mem;
+    strg content(reinterpret_cast<const char*>(mem.data()), mem.size());
     ReadString(content);
 }
 

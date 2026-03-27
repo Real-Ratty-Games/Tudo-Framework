@@ -44,8 +44,8 @@ namespace Tudo
 		bool IsFinished();
 		void Tick();
 
-		SpriteAnimation*	GetAnimation();
-		vec2				GetCurrentIndex();
+		SpriteAnimation*	GetAnimation() const;
+		vec2				GetCurrentIndex() const;
 
 	private:
 		int64 AdvanceFrame();

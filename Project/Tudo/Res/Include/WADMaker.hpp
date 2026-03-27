@@ -24,6 +24,6 @@ namespace Tudo::WADMaker
 	void MakeAll(strgv fileroot, strgv outloc, bool saveExt = false);
 
 	/// Create new wad archive from memory
-	void MakeUnique(strgv filename, strgv outloc, std::vector<WADMemItem>& data);
+	void MakeUnique(strgv filename, strgv outloc, const std::vector<WADMemItem>& data);
 }
 #endif

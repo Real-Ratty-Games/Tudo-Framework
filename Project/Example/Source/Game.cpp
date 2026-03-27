@@ -5,6 +5,10 @@
 #include "../Include/Game.hpp"
 #include "../Include/GameWindow.hpp"
 #include "../Include/GamePipeline.hpp"
+#include <FileSystem.hpp>
+
+#include <Multiply.hpp>
+#include <Transformation.hpp>
 
 using namespace MyGame;
 
@@ -61,7 +65,19 @@ void GameProgram::Tick()
 	mClock.Tick();
 	while (mClock.Wait())
 	{
-		// Logic here...
+
+		// Rotate camera around center
+
+		Viewport3D& vp = mPipeline->_vp3d;
+
+		vec3 rotationAxis = vp.Up();
+		quat q = Math::QuatFromAxisAngle(rotationAxis, Math::ToRadians(5.0f));
+		vec3 eyeOffset = vp.Eye - vp.Target;
+		vec3 rotatedOffset = Math::Multiply(eyeOffset, q);
+		vp.Eye = vp.Target + rotatedOffset;
+
+		mPipeline->_vp3d.CreateView();
+
 	}
 }
 

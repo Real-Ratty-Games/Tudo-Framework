@@ -8,14 +8,7 @@
 
 using namespace Tudo;
 
-DrawObject::DrawObject(GraphicsDevice* gdevice)
+DrawObject::DrawObject(GraphicsDevice& gdevice)
 {
-	if (!gdevice)
-		throw BigError("Instance requires a GraphicsDevice!");
-	pGDevice = gdevice;
-}
-
-GraphicsDevice* DrawObject::GetRenderer()
-{
-	return pGDevice;
+	pGDevice = &gdevice;
 }

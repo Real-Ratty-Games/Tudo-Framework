@@ -24,7 +24,7 @@ namespace Tudo
 	class GraphicsDevice
 	{
 	public:
-		GraphicsDevice(Window* window, DrawAPI api, bool vsync);
+		GraphicsDevice(Window& window, DrawAPI api, bool vsync);
 		~GraphicsDevice();
 
 		void BeginDraw();
@@ -35,11 +35,11 @@ namespace Tudo
 		const bgfx::Caps* GetGPUInfo();
 
 		void Printf(vec2i location, uint8 attr, strgv text);
-		void DrawTexture(Shader* shader, DrawSurface* surface, Texture* texture, vec2& rotpiv, vec2& size, Transform2D& transformation);
+		void DrawTexture(Shader& shader, const DrawSurface& surface, vec2 rotpiv, vec2 size, const Transform2D& transformation);
 		void SetMesh(uint8 stream, const Mesh3D& mesh);
 		void SetModelTransform(const mat4& mat);
 
-		bgfx::VertexBufferHandle	CreateVertexBuffer(const void* data, uint size, bgfx::VertexLayout& layout);
+		bgfx::VertexBufferHandle	CreateVertexBuffer(const void* data, uint size, const bgfx::VertexLayout& layout);
 		bgfx::IndexBufferHandle		CreateIndexBuffer(const void* data, uint size);
 
 		bgfx::VertexBufferHandle&	GetQuadVertexHandle();

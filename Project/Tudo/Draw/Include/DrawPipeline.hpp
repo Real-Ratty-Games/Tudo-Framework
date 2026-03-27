@@ -22,10 +22,10 @@ namespace Tudo
 	class DrawPipeline : public DrawObject
 	{
 	public:
-		DrawPipeline(GraphicsDevice* gdevice);
+		DrawPipeline(GraphicsDevice& gdevice);
 
 		virtual void Draw() = 0;
-		virtual void OnResize(const vec2& size) = 0;
+		virtual void OnResize(vec2 size) = 0;
 
 		Shader*			GetActiveShader();
 		DrawSurface*	GetActiveDrawSurface();
@@ -34,10 +34,10 @@ namespace Tudo
 		void SetActiveShader(Shader* shader);
 		void SetActiveDrawSurface(DrawSurface* surface);
 
-		void PrepareDrawModel(DrawSurface3D* surface, Viewport3D& viewport);
-		void PrepareDrawModel(DrawSurface3D* surface, ViewportOrtho3D& viewport);
+		void PrepareDrawModel(DrawSurface3D& surface, const Viewport3D& viewport);
+		void PrepareDrawModel(DrawSurface3D& surface, const ViewportOrtho3D& viewport);
 
-		void PrepareDrawSprite(DrawSurface2D* surface, Viewport2D& viewport);
+		void PrepareDrawSprite(DrawSurface2D& surface, const Viewport2D& viewport);
 
 	private:
 		Shader*			pActiveShader;

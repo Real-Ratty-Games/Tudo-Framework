@@ -7,7 +7,7 @@
 
 using namespace Tudo;
 
-Model3D::Model3D(GraphicsDevice* gdevice) : DrawObject(gdevice) {}
+Model3D::Model3D(GraphicsDevice& gdevice) : DrawObject(gdevice) {}
 
 Model3D::~Model3D()
 {
