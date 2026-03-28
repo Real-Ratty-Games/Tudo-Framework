@@ -69,7 +69,7 @@ void GameProgram::Draw()
 {
 	mGDevice->BeginDraw();
 	if (!mWindow->IsIconified())
-		mPipeline->Draw();
+		mPipeline->DrawAll();
 	mGDevice->EndDraw();
 }
 

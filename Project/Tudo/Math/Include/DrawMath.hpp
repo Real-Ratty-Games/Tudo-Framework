@@ -33,5 +33,7 @@ namespace Tudo::Math
 
 	vec3 ScreenLocation2WorldLocationPZ(vec2 screenLocation, vec2 screenSize,
 		const ViewportOrtho3D& viewport3D, float zplane);
+
+	vec2 WorldLocation2ScreenLocation(const Viewport3D& viewport3D, vec2 screenSize, vec3 worldLocation);
 }
 #endif

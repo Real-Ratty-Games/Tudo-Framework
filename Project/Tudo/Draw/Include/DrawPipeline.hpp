@@ -17,6 +17,7 @@ namespace Tudo
 	class DrawSurface3D;
 	class Viewport3D;
 	class ViewportOrtho3D;
+	class Model3D;
 
 	/// Abstract base class for render pipelines.
 	class DrawPipeline : public DrawObject
@@ -24,13 +25,15 @@ namespace Tudo
 	public:
 		DrawPipeline(GraphicsDevice& gdevice);
 
-		virtual void Draw() = 0;
+		void DrawAll();
 		virtual void OnResize(vec2 size) = 0;
 
 		Shader*			GetActiveShader();
 		DrawSurface*	GetActiveDrawSurface();
 
 	protected:
+		virtual void Draw() = 0;
+
 		void SetActiveShader(Shader* shader);
 		void SetActiveDrawSurface(DrawSurface* surface);
 
@@ -38,6 +41,8 @@ namespace Tudo
 		void PrepareDrawModel(DrawSurface3D& surface, const ViewportOrtho3D& viewport);
 
 		void PrepareDrawSprite(DrawSurface2D& surface, const Viewport2D& viewport);
+
+		void PrepareModelInstancing(Model3D& model, ModelInstanceData& idata, std::vector<ModelInstanceTransform>& tdata);
 
 	private:
 		Shader*			pActiveShader;

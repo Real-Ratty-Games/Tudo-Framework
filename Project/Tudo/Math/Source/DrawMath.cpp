@@ -113,6 +113,25 @@ vec3 Math::ScreenLocation2WorldLocationPZ(vec2 screenLocation, vec2 screenSize,
 	return world;
 }
 
+vec2 Math::WorldLocation2ScreenLocation(const Viewport3D& viewport3D, vec2 screenSize, vec3 worldLocation)
+{
+	mat4 proj		= Math::ProjectPerspLH(viewport3D.Fov, screenSize.X / screenSize.Y, viewport3D.Near, viewport3D.Far);
+	vec4 world		= vec4(worldLocation.X, worldLocation.Y, worldLocation.Z, 1.0f);
+
+	vec4 clip		= Math::Multiply(world, viewport3D.View());
+	clip			= Math::Multiply(clip, proj);
+
+	if (clip.W <= 0.0)
+		return vec2(-1); // behind view
+
+	vec3 ndc = vec3(clip.X, clip.Y, clip.Z) / clip.W;
+
+	vec2 screen;
+	screen.X = (ndc.X * 0.5f + 0.5f) * screenSize.X;
+	screen.Y = (1.0f - (ndc.Y * 0.5f + 0.5f)) * screenSize.Y;
+	return screen;
+}
+
 /*======================================================
 ======================================================*/
 

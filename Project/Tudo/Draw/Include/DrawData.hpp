@@ -18,6 +18,7 @@
 namespace Tudo
 {
 	class Sprite;
+	class Model3D;
 
 	enum class DrawAPI
 	{
@@ -90,6 +91,13 @@ namespace Tudo
 		int							MissedAmount; // Amount of instances not rendered due to hardware limitations
 	};
 
+	struct ModelInstanceData
+	{
+		Model3D*					pModel;
+		bgfx::InstanceDataBuffer	Buffer;
+		int							MissedAmount;
+	};
+
 	struct Viewport2D
 	{
 		vec2 Location;
@@ -112,6 +120,12 @@ namespace Tudo
 		{
 			Index		= vec2(0.0f);
 		}
+	};
+
+	struct ModelInstanceTransform
+	{
+		mat4 ModelMatrix;
+		vec4 IData;
 	};
 
 	struct SpriteFont

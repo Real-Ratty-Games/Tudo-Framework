@@ -54,6 +54,7 @@ GraphicsDevice::GraphicsDevice(Window& window, DrawAPI api, bool vsync)
 GraphicsDevice::~GraphicsDevice()
 {
 	Release2DQuad();
+	ReleaseShaderUniforms();
 	bgfx::shutdown();
 }
 
@@ -88,8 +89,6 @@ void GraphicsDevice::Printf(vec2i location, uint8 attr, strgv text)
 #endif
 }
 
-// bgfx::setViewClear(viewid, flags, color.ToInt(), 1.0f, 0);
-
 void GraphicsDevice::DrawTexture(Shader& shader, const DrawSurface& surface, vec2 rotpiv, vec2 size, const Transform2D& transformation)
 {
 	vec2 rscale = size * transformation.Scale;
@@ -111,7 +110,7 @@ void GraphicsDevice::DrawTexture(Shader& shader, const DrawSurface& surface, vec
 	bgfx::setState(TUDO_RENDERER_SPRITE_STATE);
 
 	vec4 ucolor = vec4(transformation.ImageColor.R, transformation.ImageColor.G, transformation.ImageColor.B, transformation.ImageColor.A);
-	shader.SetUniform("color", ucolor.Ptr());
+	SetShaderUniform("u_color", ucolor.Ptr());
 
 	shader.Submit(surface.ViewID(), TUDO_RENDERER_SPRITE_FLAGS, true);
 }
@@ -150,6 +149,44 @@ const mat4& GraphicsDevice::GetQuad2DView()
 bgfx::VertexLayout& GraphicsDevice::GetMeshVertexLayout()
 {
 	return mMesh3DVBLayout;
+}
+
+void GraphicsDevice::InitShaderUniform(strgv name, bgfx::UniformType::Enum type, uint16 nmb)
+{
+	const char* nm = name.data();
+	if (!mShaderUniforms.contains(nm))
+		mShaderUniforms[nm] = bgfx::createUniform(nm, type, nmb);
+}
+
+void GraphicsDevice::SetShaderUniform(strgv name, const void* vl, uint16 nmb)
+{
+	const char* nm = name.data();
+	if (mShaderUniforms.contains(nm))
+		bgfx::setUniform(mShaderUniforms[nm], vl, nmb);
+}
+
+void GraphicsDevice::SetShaderTexture(uint8 stage, strgv name, Texture& texture)
+{
+	const char* nm = name.data();
+	if (mShaderUniforms.contains(nm))
+		bgfx::setTexture(stage, mShaderUniforms[nm], texture.Handle());
+}
+
+bgfx::UniformHandle* GraphicsDevice::GetShaderUniform(strgv name)
+{
+	if (mShaderUniforms.contains(name.data()))
+		return &mShaderUniforms[name.data()];
+	else return nullptr;
+}
+
+void GraphicsDevice::ReleaseShaderUniforms()
+{
+	for (auto& it : mShaderUniforms)
+	{
+		if (bgfx::isValid(it.second))
+			bgfx::destroy(it.second);
+	}
+	mShaderUniforms.clear();
 }
 
 void GraphicsDevice::Init2DQuad()

@@ -12,6 +12,7 @@ namespace Tudo
 {
 	class GraphicsDevice;
 	class DrawPipeline;
+	class Shader;
 	struct Mesh3D;
 
 	class ColorModelRenderer : public ModelRenderer
@@ -21,8 +22,13 @@ namespace Tudo
 		void DrawMesh(const Mesh3D& mesh);
 		void SetColor(Color color);
 
+	protected:
+		void SetupMesh() override;
+		void DrawMeshInstanced(const Mesh3D& mesh) override;
+
 	private:
-		Color mColor;
+		Color	mColor;
+		Shader* pShader;
 	};
 }
 #endif

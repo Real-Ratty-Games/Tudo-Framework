@@ -10,20 +10,32 @@
 
 using namespace Tudo;
 
-ColorModelRenderer::ColorModelRenderer(GraphicsDevice& gdevice, DrawPipeline& pipeline) : ModelRenderer(gdevice, pipeline) {}
+ColorModelRenderer::ColorModelRenderer(GraphicsDevice& gdevice, DrawPipeline& pipeline) : ModelRenderer(gdevice, pipeline)
+{
+	pShader = nullptr;
+}
 
 void ColorModelRenderer::DrawMesh(const Mesh3D& mesh)
 {
-	Shader* shader = pPipeline->GetActiveShader();
-
 	bgfx::setState(TUDO_RENDERER_MESH_DEFAULT_STATE);
 
-	pGDevice->SetMesh(0, mesh);
-
 	vec4 color = mColor.ToVec();
-	shader->SetUniform("color", color.Ptr());
+	pGDevice->SetShaderUniform("u_color", color.Ptr());
 
-	shader->Submit(pPipeline->GetActiveDrawSurface()->ViewID(), TUDO_RENDERER_MESH_DEFAULT_DISCARD, true);
+	pGDevice->SetMesh(0, mesh);
+	pShader->Submit(pPipeline->GetActiveDrawSurface()->ViewID(), TUDO_RENDERER_MESH_DEFAULT_DISCARD, true);
+}
+
+void ColorModelRenderer::SetupMesh()
+{
+	pShader = pPipeline->GetActiveShader();
+}
+
+void ColorModelRenderer::DrawMeshInstanced(const Mesh3D& mesh)
+{
+	bgfx::setState(TUDO_RENDERER_MESH_DEFAULT_STATE);
+	pGDevice->SetMesh(0, mesh);
+	pShader->Submit(pPipeline->GetActiveDrawSurface()->ViewID(), TUDO_RENDERER_MESH_DEFAULT_DISCARD, true);
 }
 
 void ColorModelRenderer::SetColor(Color color)

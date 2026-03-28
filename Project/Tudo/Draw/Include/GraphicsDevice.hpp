@@ -7,12 +7,13 @@
 #include "SystemTypes.hpp"
 #include "DrawData.hpp"
 #include <vector>
+#include <unordered_map>
 
-#define TUDO_RENDERER_MESH_DEFAULT_DISCARD	(BGFX_DISCARD_INDEX_BUFFER | BGFX_DISCARD_VERTEX_STREAMS | BGFX_DISCARD_STATE)
-// BGFX_STATE_WRITE_Z
-#define TUDO_RENDERER_MESH_DEFAULT_STATE	(BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A | BGFX_STATE_DEPTH_TEST_LESS | BGFX_STATE_BLEND_ALPHA | BGFX_STATE_CULL_CCW)
-#define TUDO_RENDERER_SPRITE_FLAGS			(BGFX_DISCARD_INDEX_BUFFER | BGFX_DISCARD_STATE | BGFX_DISCARD_TRANSFORM)
-#define TUDO_RENDERER_SPRITE_STATE			(BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A | BGFX_STATE_BLEND_ALPHA | BGFX_STATE_DEPTH_TEST_LESS)
+#define TUDO_RENDERER_MESH_DEFAULT_DISCARD		(BGFX_DISCARD_INDEX_BUFFER | BGFX_DISCARD_VERTEX_STREAMS | BGFX_DISCARD_BINDINGS | BGFX_DISCARD_STATE | BGFX_DISCARD_TRANSFORM)
+#define TUDO_RENDERER_MESH_TRANSPARENT_STATE	(BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A | BGFX_STATE_DEPTH_TEST_LESS | BGFX_STATE_BLEND_ALPHA | BGFX_STATE_CULL_CCW)
+#define TUDO_RENDERER_MESH_DEFAULT_STATE		(BGFX_STATE_WRITE_Z | TUDO_RENDERER_MESH_TRANSPARENT_STATE)
+#define TUDO_RENDERER_SPRITE_FLAGS				(BGFX_DISCARD_INDEX_BUFFER | BGFX_DISCARD_STATE | BGFX_DISCARD_TRANSFORM | BGFX_DISCARD_BINDINGS)
+#define TUDO_RENDERER_SPRITE_STATE				(BGFX_STATE_WRITE_RGB | BGFX_STATE_WRITE_A | BGFX_STATE_BLEND_ALPHA | BGFX_STATE_DEPTH_TEST_LESS)
 
 namespace Tudo
 {
@@ -47,18 +48,25 @@ namespace Tudo
 
 		bgfx::VertexLayout&			GetMeshVertexLayout();
 
+		bgfx::UniformHandle*		GetShaderUniform(strgv name);
+		void						InitShaderUniform(strgv name, bgfx::UniformType::Enum type, uint16 nmb = 1);
+		void						SetShaderUniform(strgv name, const void* vl, uint16 nmb = 1);
+		void						SetShaderTexture(uint8 stage, strgv name, Texture& texture);
+
 		friend class AssetLoader;
 
 	private:
+		void ReleaseShaderUniforms();
 		void InitMesh3DVBLayout();
 		void Init2DQuad();
 		void Release2DQuad();
 
 	private:
-		bgfx::VertexBufferHandle	mQuad2DVB;
-		mat4						mQuad2DView;
+		bgfx::VertexBufferHandle						mQuad2DVB;
+		mat4											mQuad2DView;
 
-		bgfx::VertexLayout			mMesh3DVBLayout;
+		bgfx::VertexLayout								mMesh3DVBLayout;
+		std::unordered_map<strg, bgfx::UniformHandle>	mShaderUniforms;
 	};
 }
 #endif

@@ -40,9 +40,6 @@ namespace Tudo
 
 	private:
 		void DrawTexture(Texture* texture, vec2 rotpiv, vec2 size, const Transform2D& transformation);
-
-	private:
-		Texture* pQuad2DLastTex; // don't update sample if it's the same!
 	};
 }
 #endif
